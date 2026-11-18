@@ -2,6 +2,7 @@ import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import Navbar from "@/components/shared/Navbar";
+import Footer from "@/components/shared/Footer";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-full flex flex-col">
         <Navbar />
         {children}
+
         <Toaster
           position="top-right"
           richColors
@@ -35,6 +37,7 @@ export default function RootLayout({ children }) {
           expand={false}
           visibleToasts={3}
         />
+        <Footer />
       </body>
     </html>
   );

@@ -111,11 +111,14 @@ export default function Navbar() {
 
               <div className="my-3 h-px bg-border" />
 
-              <Button variant="outline" className="w-full border-border">
+              <Button
+                variant="outline"
+                className="w-full border-border cursor-pointer"
+              >
                 <Link href="/signin">Sign In</Link>
               </Button>
 
-              <Button className="w-full bg-primary text-primary-foreground hover:bg-[#0f4d42]">
+              <Button className="w-full bg-primary text-primary-foreground hover:bg-[#0f4d42] cursor-pointer">
                 <Link href="/signup">Sign Up</Link>
               </Button>
             </div>
