@@ -1,15 +1,19 @@
-import React from "react";
+import QuickOverview from "@/components/dashboard/tutor/QuickOverview";
+import RecentTuitions from "@/components/dashboard/tutor/RecentTuitions";
+import TutorStats from "@/components/dashboard/tutor/TutorStats";
+import TutorWelcome from "@/components/dashboard/tutor/TutorWelcome";
 
 const TutorDashboardPage = () => {
   return (
-    <section>
-      <h1 className="font-heading text-2xl font-bold text-foreground">
-        Tutor Dashboard
-      </h1>
+    <section className="space-y-6">
+      <TutorWelcome />
 
-      <p className="mt-2 text-sm text-muted-foreground">
-        Welcome to your Tutor Dashboard.
-      </p>
+      <TutorStats />
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        <RecentTuitions />
+        <QuickOverview />
+      </div>
     </section>
   );
 };
