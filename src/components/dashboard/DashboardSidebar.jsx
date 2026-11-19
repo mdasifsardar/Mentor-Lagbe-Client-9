@@ -30,6 +30,7 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { authClient } from "@/lib/auth-client";
 
 const menuItemsByRole = {
   tutor: [
@@ -114,14 +115,8 @@ const menuItemsByRole = {
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
-
-  const role = pathname.startsWith("/dashboard/student")
-    ? "student"
-    : pathname.startsWith("/dashboard/admin")
-      ? "admin"
-      : "tutor";
-
-  const menuItems = menuItemsByRole[role];
+  const { data: session } = authClient.useSession();
+  const role = session?.user?.role;
 
   return (
     <Sidebar collapsible="icon" className="border-r border-border">
@@ -157,12 +152,10 @@ export default function DashboardSidebar() {
 
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1.5">
-              {menuItems.map((item) => {
+              {menuItemsByRole[role]?.map((item) => {
                 const Icon = item.icon;
 
-                const isActive =
-                  pathname === item.href ||
-                  pathname.startsWith(`${item.href}/`);
+                const isActive = pathname === item.href;
 
                 return (
                   <SidebarMenuItem key={item.title}>
@@ -227,13 +220,11 @@ export default function DashboardSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton
               tooltip="Sign Out"
-              className="h-10 rounded-xl px-3 text-muted-foreground hover:bg-red-50 text-red-600 hover:text-red-600"
+              className="h-10 cursor-pointer justify-center rounded-xl border border-red-200 bg-red-50 px-3 text-sm font-semibold text-red-600 transition-all hover:bg-red-100 hover:text-red-700 focus:bg-red-100 focus:text-red-700"
             >
               <Link href="/" className="flex w-full items-center gap-3">
                 <LogOut className="h-4 w-4 shrink-0" />
-
                 <span className="truncate">Sign Out</span>
-
                 <ChevronRight className="ml-auto h-4 w-4 shrink-0 group-data-[collapsible=icon]:hidden" />
               </Link>
             </SidebarMenuButton>

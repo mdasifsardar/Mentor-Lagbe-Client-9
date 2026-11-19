@@ -3,15 +3,12 @@
 import { usePathname } from "next/navigation";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import DashboardSidebar from "./DashboardSidebar";
+import { authClient } from "@/lib/auth-client";
 
 export default function DashboardLayout({ children }) {
-  const pathname = usePathname();
-
-  const role = pathname.startsWith("/dashboard/student")
-    ? "Student"
-    : pathname.startsWith("/dashboard/admin")
-      ? "Admin"
-      : "Tutor";
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+  const role = user?.role;
 
   return (
     <SidebarProvider>
@@ -28,25 +25,35 @@ export default function DashboardLayout({ children }) {
 
           {/* Workspace Title */}
           <div>
-            <p className="font-heading text-sm font-semibold text-foreground">
+            <p className="font-heading text-sm font-semibold text-foreground capitalize">
               {role} Workspace
             </p>
 
             <p className="hidden text-xs text-muted-foreground sm:block">
-              Manage your {role.toLowerCase()} activities
+              Manage your {role} activities
             </p>
           </div>
 
           {/* Current User */}
           <div className="ml-auto flex items-center gap-3">
+            {/* User Information */}
             <div className="hidden text-right sm:block">
-              <p className="text-sm font-semibold text-foreground">{role}</p>
+              <p className="text-sm font-bold leading-5 text-foreground">
+                {user?.name}
+              </p>
 
-              <p className="text-xs text-muted-foreground">{role} Account</p>
+              <div className="mt-0.5 flex items-center justify-end gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+
+                <p className="text-xs font-medium capitalize text-muted-foreground">
+                  {role}
+                </p>
+              </div>
             </div>
 
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary ring-1 ring-primary/20">
-              {role.charAt(0)}
+            {/* Avatar */}
+            <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-primary/20 bg-primary/10 font-heading text-sm font-bold text-primary shadow-sm">
+              A
             </div>
           </div>
         </header>
