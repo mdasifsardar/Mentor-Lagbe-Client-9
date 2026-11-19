@@ -32,7 +32,7 @@ const SignInForm = () => {
         return;
       }
 
-      toast.success(user?.message || "Sign in successful!");
+      toast.success(user?.message || "Sign in successfull!");
       router.push("/");
     } catch (err) {
       toast.error(err?.message || "Something went wrong!");
