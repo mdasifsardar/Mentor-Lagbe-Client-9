@@ -12,9 +12,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { postTution } from "@/lib/actions/tutor/tutor";
-import { error } from "better-auth/api";
-import { BookOpen, ImagePlus, RotateCcw, Send, Upload } from "lucide-react";
+import { postTuition } from "@/lib/actions/tutor/tutor";
+import { authClient } from "@/lib/auth-client";
+import { BookOpen, ImagePlus, Send, Upload } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -22,8 +22,11 @@ import { toast } from "sonner";
 const PostTuitionForm = () => {
   //              State management
   const [imgPreview, setImgPreview] = useState("");
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
 
-  //
+  //              Post tuition
+
   const handlePostTution = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -58,11 +61,13 @@ const PostTuitionForm = () => {
       tuitionData.bannerImage = imgResult.data.url;
       tuitionData.monthlyFee = Number(tuitionData.monthlyFee);
       tuitionData.daysPerWeek = Number(tuitionData.daysPerWeek);
+      tuitionData.tutorName = user?.name;
+      tuitionData.tutorEmail = user?.email;
 
-      const res = await postTution(tuitionData);
+      const res = await postTuition(tuitionData);
 
       if (!res.success) {
-        toast.error(res?.error || res?.message || "Failed to add tution!");
+        toast.error(res?.error || res?.message || "Failed to add tuition!");
         return;
       }
 

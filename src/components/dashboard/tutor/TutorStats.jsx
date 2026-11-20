@@ -1,13 +1,16 @@
 import { BookOpen, CheckCircle2, Users, Crown } from "lucide-react";
 
 import DashboardStatCard from "@/components/dashboard/DashboardStatCard";
+import { getTuition } from "@/lib/actions/tutor/tutor";
 
-const TutorStats = () => {
+const TutorStats = async () => {
+  const postTutionData = await getTuition();
+
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <DashboardStatCard
         title="Total Tuitions Posted"
-        value="8"
+        value={postTutionData.length ?? 0}
         label="Total"
         icon={BookOpen}
         iconClassName="bg-primary/10 text-primary"
