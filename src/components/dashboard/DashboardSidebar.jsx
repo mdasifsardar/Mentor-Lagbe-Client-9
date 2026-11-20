@@ -41,7 +41,7 @@ const menuItemsByRole = {
     },
     {
       title: "Post Tuition",
-      href: "/dashboard/tutor/post-tuition",
+      href: "/dashboard/tutor/post-tution",
       icon: Plus,
     },
     {
