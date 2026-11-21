@@ -262,13 +262,6 @@ const MyTuitions = ({ tuitionData }) => {
 
                           {/* Actions */}
                           <div className="flex flex-wrap items-center gap-2">
-                            {/* <Button
-                              variant="outline"
-                              className="h-9 gap-2 border-[#DDE4E1] bg-white text-[#17211F] hover:border-primary/40 hover:bg-primary/5 hover:text-primary cursor-pointer"
-                            >
-                              <Edit3 className="h-3.5 w-3.5" />
-                              Edit
-                            </Button> */}
                             <EditTuitionDialog tuition={tuition} />
 
                             <Button
@@ -283,13 +276,6 @@ const MyTuitions = ({ tuitionData }) => {
                               {tuition.isActive ? "Close" : "Activate"}
                             </Button>
 
-                            {/* <Button
-                              variant="outline"
-                              className="h-9 gap-2 border-red-200 bg-white text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 cursor-pointer"
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                              Delete
-                            </Button> */}
                             <DeleteTuitionDialog tuition={tuition} />
 
                             <Button

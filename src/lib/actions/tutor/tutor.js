@@ -53,3 +53,12 @@ export const updateTutionData = async ({ id, ...updateTuition }) => {
 
   return res.json();
 };
+
+export const deleteTuitionData = async (id) => {
+  const res = await fetch(`${BASE_URL}/delete-tuition/${id}`, {
+    method: "DELETE",
+    cache: "no-store",
+  });
+
+  return res.json();
+};
