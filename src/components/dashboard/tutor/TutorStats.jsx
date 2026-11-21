@@ -1,16 +1,13 @@
 import { BookOpen, CheckCircle2, Users, Crown } from "lucide-react";
 
 import DashboardStatCard from "@/components/dashboard/DashboardStatCard";
-import { getTuition } from "@/lib/actions/tutor/tutor";
 
-const TutorStats = async () => {
-  const postTutionData = await getTuition();
-
+const TutorStats = ({ tuitionData }) => {
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <DashboardStatCard
         title="Total Tuitions Posted"
-        value={postTutionData.length ?? 0}
+        value={tuitionData.length ?? 0}
         label="Total"
         icon={BookOpen}
         iconClassName="bg-primary/10 text-primary"
@@ -19,7 +16,10 @@ const TutorStats = async () => {
 
       <DashboardStatCard
         title="Active / Approved Tuitions"
-        value="6"
+        value={
+          tuitionData.filter((tuition) => tuition.approvalStatus === "approved")
+            .length
+        }
         label="Approved"
         icon={CheckCircle2}
         iconClassName="bg-green-50 text-green-600"

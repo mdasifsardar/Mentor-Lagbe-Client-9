@@ -15,72 +15,56 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
+import { updatePostIsActive } from "@/lib/actions/tutor/tutor";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import EditTuitionDialog from "./EditTuitionDialog";
+import DeleteTuitionDialog from "./DeleteTuitionDialog";
 
-const MyTuitions = () => {
+const MyTuitions = ({ tuitionData }) => {
+  const router = useRouter();
+
+  //        Handle update isActive
+  const handleIsActive = async (id, currentStatus) => {
+    try {
+      const res = await updatePostIsActive(id, !currentStatus);
+
+      if (res.success) {
+        toast.success(!currentStatus ? "Tution activated" : "Tution closed");
+        router.refresh();
+      } else {
+        toast.error(res?.message || "Failed to update status!");
+      }
+    } catch (err) {
+      toast.error("Something went wrong!");
+    }
+  };
+
+  //
   const stats = [
     {
       label: "Total Tuitions",
-      value: 3,
+      value: tuitionData.length ?? 0,
       valueClass: "text-[#17211F]",
     },
     {
       label: "Approved",
-      value: 1,
+      value: tuitionData.filter(
+        (tuition) => tuition.approvalStatus === "approved",
+      ).length,
       valueClass: "text-emerald-600",
     },
     {
       label: "Pending",
-      value: 1,
+      value: tuitionData.filter(
+        (tuition) => tuition.approvalStatus === "pending",
+      ).length,
       valueClass: "text-amber-600",
     },
     {
       label: "Active",
-      value: 2,
+      value: tuitionData.filter((tuition) => tuition.isActive === true).length,
       valueClass: "text-primary",
-    },
-  ];
-
-  const tuitions = [
-    {
-      id: 1,
-      title: "Concept-Based Physics Sessions for HSC First Year",
-      subject: "Physics",
-      classLevel: "Class 11",
-      mode: "Online",
-      location: "Uttara, Dhaka",
-      monthlyFee: 4500,
-      daysPerWeek: 3,
-      approvalStatus: "pending",
-      isActive: true,
-      image: "https://i.ibb.co/sv10wqjM/2301078-250x186.webp",
-    },
-    {
-      id: 2,
-      title: "Advanced Mathematics for HSC Students",
-      subject: "Mathematics",
-      classLevel: "Class 11",
-      mode: "Offline",
-      location: "Mirpur, Dhaka",
-      monthlyFee: 5000,
-      daysPerWeek: 4,
-      approvalStatus: "approved",
-      isActive: true,
-      image:
-        "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&q=80",
-    },
-    {
-      id: 3,
-      title: "English Grammar & IELTS Foundation",
-      subject: "English",
-      classLevel: "Class 12",
-      mode: "Online",
-      location: "Online",
-      monthlyFee: 3500,
-      daysPerWeek: 3,
-      approvalStatus: "rejected",
-      isActive: false,
-      image:
-        "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=800&q=80",
     },
   ];
 
@@ -151,25 +135,27 @@ const MyTuitions = () => {
 
         {/* Tuition Cards */}
         <div className="space-y-5">
-          {tuitions.map((tuition) => {
+          {tuitionData.map((tuition) => {
             const approval = approvalConfig[tuition.approvalStatus];
 
             const ApprovalIcon = approval.icon;
 
             return (
               <Card
-                key={tuition.id}
+                key={tuition._id}
                 className="overflow-hidden border-[#E2E8E5] bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
               >
                 <CardContent className="p-0">
-                  <div className="flex flex-col lg:flex-row">
+                  <div className="flex flex-col lg:flex-row p-4 lg:gap-5">
                     {/* Image */}
-                    <div className=" relative h-56 w-full shrink-0 bg-[#F1F4F2] lg:h-auto lg:w-64">
+                    <div className="relative h-56 w-full shrink-0 bg-[#F1F4F2] lg:h-auto lg:w-64 overflow-hidden rounded-xl">
                       <Image
-                        src={tuition.image}
+                        src={tuition.bannerImage}
                         alt={tuition.title}
                         fill
-                        className="h-full w-full object-cover"
+                        loading="eager"
+                        sizes="(max-width: 1024px) 100vw, 256px"
+                        className="object-cover rounded-xl"
                       />
                     </div>
 
@@ -276,15 +262,19 @@ const MyTuitions = () => {
 
                           {/* Actions */}
                           <div className="flex flex-wrap items-center gap-2">
-                            <Button
+                            {/* <Button
                               variant="outline"
                               className="h-9 gap-2 border-[#DDE4E1] bg-white text-[#17211F] hover:border-primary/40 hover:bg-primary/5 hover:text-primary cursor-pointer"
                             >
                               <Edit3 className="h-3.5 w-3.5" />
                               Edit
-                            </Button>
+                            </Button> */}
+                            <EditTuitionDialog tuition={tuition} />
 
                             <Button
+                              onClick={() =>
+                                handleIsActive(tuition._id, tuition.isActive)
+                              }
                               variant="outline"
                               className="h-9 gap-2 border-[#DDE4E1] bg-white text-[#17211F] hover:border-primary/40 hover:bg-primary/5 hover:text-primary cursor-pointer"
                             >
@@ -293,13 +283,14 @@ const MyTuitions = () => {
                               {tuition.isActive ? "Close" : "Activate"}
                             </Button>
 
-                            <Button
+                            {/* <Button
                               variant="outline"
                               className="h-9 gap-2 border-red-200 bg-white text-red-600 hover:border-red-300 hover:bg-red-50 hover:text-red-700 cursor-pointer"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                               Delete
-                            </Button>
+                            </Button> */}
+                            <DeleteTuitionDialog tuition={tuition} />
 
                             <Button
                               variant="ghost"

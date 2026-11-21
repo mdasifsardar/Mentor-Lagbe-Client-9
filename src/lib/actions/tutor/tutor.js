@@ -5,7 +5,7 @@ export const postTuition = async (postTuitionData) => {
     method: "POST",
     cache: "no-store",
     headers: {
-      "content-type": "application/json",
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(postTuitionData),
   });
@@ -16,5 +16,40 @@ export const getTuition = async () => {
   const res = await fetch(`${BASE_URL}/tuition`, {
     cache: "no-store",
   });
+  return res.json();
+};
+
+export const getTuitionByTutorEmail = async (TutorEmail) => {
+  const res = await fetch(`${BASE_URL}/tuition/${TutorEmail}`, {
+    cache: "no-store",
+  });
+  return res.json();
+};
+
+export const updatePostIsActive = async (id, isActive) => {
+  const res = await fetch(`${BASE_URL}/tuition/${id}`, {
+    method: "PATCH",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      isActive,
+    }),
+  });
+
+  return res.json();
+};
+
+export const updateTutionData = async ({ id, ...updateTuition }) => {
+  const res = await fetch(`${BASE_URL}/update-tuition/${id}`, {
+    method: "PATCH",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updateTuition),
+  });
+
   return res.json();
 };

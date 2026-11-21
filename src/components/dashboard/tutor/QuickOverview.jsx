@@ -2,7 +2,7 @@ import { Users, Crown, CheckCircle2 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 
-const QuickOverview = () => {
+const QuickOverview = ({ tuitionData }) => {
   return (
     <Card className="border-border bg-card shadow-sm">
       <CardContent className="p-5 sm:p-6">
@@ -75,7 +75,12 @@ const QuickOverview = () => {
 
               <div>
                 <p className="text-sm font-semibold text-foreground">
-                  6 Approved Tuitions
+                  {
+                    tuitionData.filter(
+                      (tuition) => tuition.approvalStatus === "approved",
+                    ).length
+                  }
+                  Approved Tuitions
                 </p>
 
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">
