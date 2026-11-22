@@ -5,10 +5,8 @@ import {
   BookOpen,
   CalendarDays,
   CheckCircle2,
-  GraduationCap,
   MapPin,
   ShieldCheck,
-  Star,
   Users,
   Wallet,
 } from "lucide-react";
@@ -49,50 +47,6 @@ const subjects = [
   "ICT",
 ];
 
-const plans = [
-  {
-    name: "Free",
-    price: "৳0",
-    tagline: "Start exploring",
-    features: [
-      "Up to 2 tuition posts (Tutor)",
-      "Up to 5 bookmarks (Student)",
-      "Standard support",
-    ],
-  },
-  {
-    name: "Pro",
-    price: "$10 – $15",
-    tagline: "For serious learners & tutors",
-    features: [
-      "Unlimited tuition posts",
-      "Unlimited bookmarks",
-      "Verified badge",
-      "Priority placement",
-    ],
-    featured: true,
-  },
-];
-
-const stats = [
-  { label: "Verified tutors", value: "350+" },
-  { label: "Students matched", value: "1,200+" },
-  { label: "Tuition batches", value: "500+" },
-];
-
-const testimonials = [
-  {
-    name: "Nusrat Jahan",
-    role: "HSC Student, Dhaka",
-    text: "I found a Physics tutor within two days. The application flow was simple and the tutor was verified.",
-  },
-  {
-    name: "Rakib Hasan",
-    role: "Tutor, Mathematics",
-    text: "Posting batches and managing applicants from one dashboard saves me hours every week.",
-  },
-];
-
 export default async function Home() {
   const data = await getTuitions("limit=6");
   const tuitions = data?.tuitions || [];
@@ -120,22 +74,6 @@ export default async function Home() {
 
             <div className="mt-8">
               <HomeSearch />
-            </div>
-
-            <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 text-xs text-white/70 sm:text-sm">
-              <span className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-[#D9A441]" /> 1,200+ active
-                students
-              </span>
-
-              <span className="flex items-center gap-2">
-                <GraduationCap className="h-4 w-4 text-[#D9A441]" /> 350+
-                verified tutors
-              </span>
-
-              <span className="flex items-center gap-2">
-                <Star className="h-4 w-4 text-[#D9A441]" /> 4.9 average rating
-              </span>
             </div>
           </div>
 
@@ -301,75 +239,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Pricing teaser */}
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm font-semibold text-primary">Membership</p>
-
-          <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            Free to start. Pro when you are ready.
-          </h2>
-        </div>
-
-        <div className="mx-auto mt-10 grid max-w-4xl gap-6 md:grid-cols-2">
-          {plans.map((plan) => (
-            <Card
-              key={plan.name}
-              className={`h-full gap-0 rounded-2xl p-6 shadow-sm ${
-                plan.featured
-                  ? "border-2 border-primary bg-primary/5"
-                  : "border border-border bg-card"
-              }`}
-            >
-              <div className="flex items-center justify-between gap-3">
-                <h3 className="font-heading text-xl font-bold text-foreground">
-                  {plan.name}
-                </h3>
-
-                {plan.featured && (
-                  <Badge className="border-0 bg-accent text-accent-foreground hover:bg-accent">
-                    Popular
-                  </Badge>
-                )}
-              </div>
-
-              <p className="mt-1 text-sm text-muted-foreground">
-                {plan.tagline}
-              </p>
-
-              <p className="mt-4 font-heading text-3xl font-bold text-foreground">
-                {plan.price}
-              </p>
-
-              <ul className="mt-5 space-y-2.5">
-                {plan.features.map((feature) => (
-                  <li
-                    key={feature}
-                    className="flex items-start gap-2 text-sm text-muted-foreground"
-                  >
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-
-              <Link href="/pricing" className="mt-6 block">
-                <Button
-                  className={`h-11 w-full cursor-pointer font-semibold ${
-                    plan.featured
-                      ? "bg-primary text-primary-foreground hover:bg-[#0F4D42]"
-                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                  }`}
-                >
-                  See plans
-                </Button>
-              </Link>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* Subjects + stats + testimonials */}
+      {/* Subjects */}
       <section className="border-t border-border bg-card">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
@@ -391,61 +261,6 @@ export default async function Home() {
               >
                 {subject}
               </Link>
-            ))}
-          </div>
-
-          <div className="mt-10 grid gap-4 sm:grid-cols-3 sm:gap-6">
-            {stats.map((stat) => (
-              <Card
-                key={stat.label}
-                className="gap-0 rounded-2xl border border-border bg-background p-6 text-center shadow-none"
-              >
-                <p className="font-heading text-2xl font-bold text-primary sm:text-3xl">
-                  {stat.value}
-                </p>
-
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {stat.label}
-                </p>
-              </Card>
-            ))}
-          </div>
-
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {testimonials.map((item) => (
-              <Card
-                key={item.name}
-                className="gap-0 rounded-2xl border border-border bg-background p-6 shadow-none"
-              >
-                <div className="flex gap-1">
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <Star
-                      key={index}
-                      className="h-4 w-4 fill-accent text-accent"
-                    />
-                  ))}
-                </div>
-
-                <p className="mt-4 text-sm leading-6 text-muted-foreground">
-                  “{item.text}”
-                </p>
-
-                <div className="mt-5 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 font-heading text-sm font-bold text-primary">
-                    {item.name.slice(0, 2)}
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-bold text-foreground">
-                      {item.name}
-                    </p>
-
-                    <p className="text-xs text-muted-foreground">
-                      {item.role}
-                    </p>
-                  </div>
-                </div>
-              </Card>
             ))}
           </div>
         </div>

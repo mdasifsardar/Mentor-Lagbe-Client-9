@@ -16,47 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Applicants = () => {
-  const applications = [
-    {
-      id: 1,
-      studentName: "Rahim Ahmed",
-      studentEmail: "rahim@gmail.com",
-      studentPhone: "01712345678",
-      tuitionTitle: "Concept-Based Physics Sessions for HSC First Year",
-      subject: "Physics",
-      monthlyFee: 4500,
-      preferredSchedule: "Sun, Tue, Thu — 7:00 PM",
-      studentNote: "I need help with Physics concepts and numerical problems.",
-      appliedAt: "Nov 20, 2026",
-      status: "pending",
-    },
-    {
-      id: 2,
-      studentName: "Nusrat Jahan",
-      studentEmail: "nusrat@gmail.com",
-      studentPhone: "01898765432",
-      tuitionTitle: "Advanced Mathematics for HSC Students",
-      subject: "Mathematics",
-      monthlyFee: 5000,
-      preferredSchedule: "Mon, Wed, Fri — 6:30 PM",
-      studentNote: "Looking for regular guidance before my HSC exams.",
-      appliedAt: "Nov 19, 2026",
-      status: "accepted",
-    },
-    {
-      id: 3,
-      studentName: "Tanvir Hasan",
-      studentEmail: "tanvir@gmail.com",
-      studentPhone: "01945678912",
-      tuitionTitle: "English Grammar & IELTS Foundation",
-      subject: "English",
-      monthlyFee: 3500,
-      preferredSchedule: "Sat, Mon, Wed — 8:00 PM",
-      studentNote: "Interested in improving grammar and IELTS basics.",
-      appliedAt: "Nov 18, 2026",
-      status: "rejected",
-    },
-  ];
+  const applications = [];
 
   const statusConfig = {
     pending: {

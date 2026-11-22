@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GraduationCap, Mail, MapPin, Phone } from "lucide-react";
+import { GraduationCap, Mail, MapPin } from "lucide-react";
 import { FaFacebook, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 export default function Footer() {
@@ -47,11 +47,6 @@ export default function Footer() {
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-[#D9A441]" />
                 <span>hello@mentorlagbe.com</span>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <Phone className="h-4 w-4 text-[#D9A441]" />
-                <span>+880 1XXX-XXXXXX</span>
               </div>
 
               <div className="flex items-center gap-3">

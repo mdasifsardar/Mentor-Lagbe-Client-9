@@ -21,14 +21,14 @@ import { Textarea } from "@/components/ui/textarea";
 
 const Profile = () => {
   const user = {
-    name: "MD ASIF",
-    email: "mdasif@gmail.com",
-    role: "Tutor",
-    phone: "01712345678",
-    location: "Dhaka, Bangladesh",
-    bio: "Passionate tutor focused on helping students build strong concepts and achieve their academic goals.",
-    plan: "Free",
-    joined: "November 2026",
+    name: "",
+    email: "",
+    role: "",
+    phone: "",
+    location: "",
+    bio: "",
+    plan: "",
+    joined: "",
   };
 
   return (
