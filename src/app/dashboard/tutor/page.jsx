@@ -2,7 +2,7 @@ import QuickOverview from "@/components/dashboard/tutor/QuickOverview";
 import RecentTuitions from "@/components/dashboard/tutor/RecentTuitions";
 import TutorStats from "@/components/dashboard/tutor/TutorStats";
 import TutorWelcome from "@/components/dashboard/tutor/TutorWelcome";
-import { getTuitionByTutorEmail } from "@/lib/actions/tutor/tutor";
+import { getTuitionByTutorEmail, getApplicationsForTutor } from "@/lib/actions/tutor/tutor";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
@@ -12,17 +12,23 @@ const TutorDashboardPage = async () => {
   });
   const tutorEmail = session?.user?.email;
 
-  const tuitionData = await getTuitionByTutorEmail(tutorEmail);
+  const [tuitionData, applicationData] = await Promise.all([
+    getTuitionByTutorEmail(tutorEmail),
+    getApplicationsForTutor(tutorEmail),
+  ]);
+
+  const tuitions = tuitionData || [];
+  const applications = applicationData?.applications || [];
 
   return (
     <section className="space-y-6">
       <TutorWelcome />
 
-      <TutorStats tuitionData={tuitionData} />
+      <TutorStats tuitionData={tuitions} applications={applications} />
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <RecentTuitions />
-        <QuickOverview tuitionData={tuitionData} />
+        <RecentTuitions tuitions={tuitions} />
+        <QuickOverview tuitions={tuitions} applications={applications} />
       </div>
     </section>
   );

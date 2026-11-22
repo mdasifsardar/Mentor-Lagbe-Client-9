@@ -15,8 +15,34 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const Applicants = () => {
-  const applications = [];
+const formatAppliedAt = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleString("en-BD");
+};
+
+const Applicants = ({ applications = [], tuitions = [] }) => {
+  const applicantRows =
+    applications.map((application) => ({
+      id: application._id ?? application.id,
+      studentName: application.studentName,
+      studentEmail: application.studentEmail,
+      studentPhone: application.studentPhone,
+      tuitionTitle: application.tuitionTitle,
+      subject: application.subject,
+      monthlyFee: application.monthlyFee || 0,
+      preferredSchedule: application.preferredSchedule,
+      studentNote: application.studentNote,
+      appliedAt: application.appliedAt,
+    })) || [];
+
+  const totalApplicants = applicantRows.length;
+  const pendingApplicants = applicantRows.filter(
+    (application) => application.status === "pending",
+  ).length;
+  const acceptedApplicants = applicantRows.filter(
+    (application) => application.status === "accepted",
+  ).length;
 
   const statusConfig = {
     pending: {
@@ -63,7 +89,9 @@ const Applicants = () => {
                 Total Applicants
               </p>
 
-              <p className="mt-2 text-2xl font-bold text-[#17211F]">3</p>
+              <p className="mt-2 text-2xl font-bold text-[#17211F]">
+                {totalApplicants}
+              </p>
             </CardContent>
           </Card>
 
@@ -73,7 +101,9 @@ const Applicants = () => {
                 Pending Review
               </p>
 
-              <p className="mt-2 text-2xl font-bold text-amber-600">1</p>
+              <p className="mt-2 text-2xl font-bold text-amber-600">
+                {pendingApplicants}
+              </p>
             </CardContent>
           </Card>
 
@@ -83,7 +113,9 @@ const Applicants = () => {
                 Accepted
               </p>
 
-              <p className="mt-2 text-2xl font-bold text-emerald-600">1</p>
+              <p className="mt-2 text-2xl font-bold text-emerald-600">
+                {acceptedApplicants}
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -107,9 +139,11 @@ const Applicants = () => {
                 defaultValue="all"
               >
                 <option value="all">All Tuitions</option>
-                <option value="physics">Physics — HSC First Year</option>
-                <option value="math">Advanced Mathematics</option>
-                <option value="english">English Grammar & IELTS</option>
+                {tuitions.map((tuition) => (
+                  <option key={tuition._id || tuition.title} value={tuition.subject}>
+                    {tuition.title}
+                  </option>
+                ))}
               </select>
             </div>
           </CardContent>
@@ -117,7 +151,7 @@ const Applicants = () => {
 
         {/* Applicant Cards */}
         <div className="space-y-5">
-          {applications.map((application) => {
+          {applicantRows.map((application) => {
             const status = statusConfig[application.status];
 
             const StatusIcon = status.icon;
@@ -186,13 +220,12 @@ const Applicants = () => {
                           <span className="text-xs text-[#66736F]">
                             ৳{application.monthlyFee.toLocaleString()}
                             /month
-                          </span>
-                        </div>
+                          </span>                        </div>
                       </div>
 
                       <div className="flex items-center gap-1.5 text-xs text-[#66736F]">
                         <CalendarDays className="h-3.5 w-3.5" />
-                        Applied {application.appliedAt}
+                        Applied {formatAppliedAt(application.appliedAt)}
                       </div>
                     </div>
                   </div>

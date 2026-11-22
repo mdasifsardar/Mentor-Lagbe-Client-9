@@ -33,6 +33,14 @@ export const getTuitionByTutorEmail = async (TutorEmail) => {
   return res.json();
 };
 
+export const getApplicationsForTutor = async (TutorEmail) => {
+  const res = await fetch(`${BASE_URL}/applications/tutor/${encodeURIComponent(TutorEmail)}`, {
+    cache: "no-store",
+  });
+
+  return res.json();
+};
+
 export const updatePostIsActive = async (id, isActive) => {
   const res = await fetch(`${BASE_URL}/tuition/${id}`, {
     method: "PATCH",

@@ -2,7 +2,15 @@ import { Users, Crown, CheckCircle2 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 
-const QuickOverview = ({ tuitionData }) => {
+const QuickOverview = ({ tuitions = [], applications = [] }) => {
+  const totalTuitions = tuitions.length;
+  const approvedTuitions = tuitions.filter(
+    (tuition) => tuition.approvalStatus === "approved",
+  ).length;
+  const approvalRate = totalTuitions
+    ? Math.round((approvedTuitions / totalTuitions) * 100)
+    : 0;
+
   return (
     <Card className="border-border bg-card shadow-sm">
       <CardContent className="p-5 sm:p-6">
@@ -23,11 +31,13 @@ const QuickOverview = ({ tuitionData }) => {
                 Approval Rate
               </span>
 
-              <span className="text-sm font-bold text-primary">75%</span>
+              <span className="text-sm font-bold text-primary">
+                {approvalRate}%
+              </span>
             </div>
 
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-primary/10">
-              <div className="h-full w-[75%] rounded-full bg-primary" />
+              <div className={`h-full rounded-full bg-primary`} style={{ width: `${approvalRate}%` }} />
             </div>
           </div>
 
@@ -57,7 +67,7 @@ const QuickOverview = ({ tuitionData }) => {
 
               <div>
                 <p className="text-sm font-semibold text-foreground">
-                  24 Applicants
+                  {applications.length} Applicants
                 </p>
 
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">
@@ -75,12 +85,7 @@ const QuickOverview = ({ tuitionData }) => {
 
               <div>
                 <p className="text-sm font-semibold text-foreground">
-                  {
-                    tuitionData.filter(
-                      (tuition) => tuition.approvalStatus === "approved",
-                    ).length
-                  }
-                  Approved Tuitions
+                  {approvedTuitions} Approved Tuitions
                 </p>
 
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">
