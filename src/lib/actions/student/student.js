@@ -35,3 +35,21 @@ export const getStudentApplications = async (email) => {
 
   return data;
 };
+
+export const applyForTuition = async (applicationData) => {
+  const res = await fetch(`${BASE_URL}/applications`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(applicationData),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to submit application");
+  }
+
+  return data;
+};

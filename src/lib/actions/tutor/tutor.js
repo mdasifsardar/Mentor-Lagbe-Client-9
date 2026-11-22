@@ -12,9 +12,8 @@ export const postTuition = async (postTuitionData) => {
   return res.json();
 };
 
-export const getTuitions = async () => {
-  const res = await fetch(`${BASE_URL}/tuitions`, {
-    method: "GET",
+export const getTuitions = async (query = "") => {
+  const res = await fetch(`${BASE_URL}/tuitions${query ? `?${query}` : ""}`, {
     cache: "no-store",
   });
 
@@ -69,4 +68,19 @@ export const deleteTuitionData = async (id) => {
   });
 
   return res.json();
+};
+
+export const getTuitionById = async (id) => {
+  const res = await fetch(`${BASE_URL}/tuition/${id}`, {
+    method: "GET",
+    cache: "no-store",
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to fetch tuition");
+  }
+
+  return data.tuition;
 };

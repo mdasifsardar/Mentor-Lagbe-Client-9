@@ -75,7 +75,7 @@ const TuitionCard = ({ tuition }) => {
         </div>
 
         <Button
-          render={<Link href={`/tuitions/${tuition._id}`} />}
+          render={<Link href={`/browse-tuitions/${tuition._id}`} />}
           nativeButton={false}
           className="gap-2 rounded-xl bg-[#176B5B] text-white hover:bg-[#125447]"
         >
