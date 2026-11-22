@@ -128,7 +128,7 @@ export default function Navbar() {
                   <div className="space-y-1 py-2">
                     <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-colors focus:bg-primary/10 focus:text-primary">
                       <Link
-                        href="/dashboard/tutor"
+                        href={`/dashboard/${user?.role}`}
                         className="flex w-full items-center gap-3"
                       >
                         <LayoutDashboard className="h-4 w-4 text-primary" />
