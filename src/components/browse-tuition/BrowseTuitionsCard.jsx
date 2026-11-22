@@ -6,6 +6,7 @@ import { ArrowRight, CalendarDays, MapPin, UserRound } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { formatClassLevel } from "@/lib/format";
 
 const TuitionCard = ({ tuition }) => {
   return (
@@ -36,7 +37,7 @@ const TuitionCard = ({ tuition }) => {
           </Badge>
 
           <span className="text-xs font-medium text-muted-foreground">
-            {tuition.classLevel}
+            {formatClassLevel(tuition.classLevel)}
           </span>
         </div>
 

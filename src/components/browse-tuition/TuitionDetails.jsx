@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   BookOpen,
   CalendarDays,
@@ -26,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 import { applyForTuition } from "@/lib/actions/student/student";
+import { formatClassLevel } from "@/lib/format";
 
 const TuitionDetails = ({ tuition, user }) => {
   const [open, setOpen] = useState(false);
@@ -96,6 +98,20 @@ const TuitionDetails = ({ tuition, user }) => {
 
   return (
     <div className="mx-auto max-w-5xl space-y-8">
+      {/* Banner */}
+      {tuition.bannerImage && (
+        <div className="relative h-52 w-full overflow-hidden rounded-2xl bg-[#FAF6EF] sm:h-72">
+          <Image
+            src={tuition.bannerImage}
+            alt={tuition.title}
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 1024px"
+            className="object-cover"
+          />
+        </div>
+      )}
+
       {/* Header */}
       <div className="rounded-2xl bg-[#1E3A34] p-6 text-white sm:p-8">
         <div className="mb-4 flex flex-wrap items-center gap-3">
@@ -104,7 +120,7 @@ const TuitionDetails = ({ tuition, user }) => {
           </span>
 
           <span className="rounded-full bg-white/10 px-4 py-1 text-sm">
-            {tuition.classLevel}
+            {formatClassLevel(tuition.classLevel)}
           </span>
         </div>
 
@@ -133,7 +149,7 @@ const TuitionDetails = ({ tuition, user }) => {
         <InfoItem
           icon={<GraduationCap size={20} />}
           label="Class Level"
-          value={tuition.classLevel}
+          value={formatClassLevel(tuition.classLevel)}
         />
 
         <InfoItem
@@ -196,7 +212,7 @@ const TuitionDetails = ({ tuition, user }) => {
       {/* Apply Section */}
       <div className="flex flex-col items-start justify-between gap-5 rounded-2xl bg-[#FAF6EF] p-6 sm:flex-row sm:items-center">
         <div>
-          <p className="text-sm text-gray-500">Monthly Salary</p>
+          <p className="text-sm text-gray-500">Monthly Fee</p>
 
           <h2 className="text-3xl font-bold text-[#1E3A34]">
             ৳{tuition.monthlyFee}
@@ -280,7 +296,7 @@ const TuitionDetails = ({ tuition, user }) => {
           </p>
         ) : (
           <Button
-            render={<Link href="/login" />}
+            render={<Link href="/signin" />}
             nativeButton={false}
             className="bg-[#176B5B] text-white hover:bg-[#125447]"
           >

@@ -32,7 +32,7 @@ const filterGroups = [
   {
     id: "mode",
     title: "Tuition Mode",
-    options: ["Online", "Offline", "Both"],
+    options: ["Online", "Offline"],
   },
 ];
 
