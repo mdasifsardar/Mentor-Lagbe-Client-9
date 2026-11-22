@@ -21,9 +21,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Navbar() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   //        Navbar links
   const navLinks = [
     {
@@ -44,8 +46,9 @@ export default function Navbar() {
     },
   ];
 
-  //        Router
+  //        Router & Pathname
   const router = useRouter();
+  const pathname = usePathname();
 
   //        User session
   const { data: session } = authClient.useSession();
@@ -73,15 +76,26 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center gap-7 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive =
+              link.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(link.href);
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`relative py-1 text-sm transition-colors ${
+                  isActive
+                    ? "font-semibold text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:rounded-full after:bg-primary"
+                    : "font-medium text-muted-foreground hover:text-primary"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* User session */}
@@ -189,7 +203,7 @@ export default function Navbar() {
         )}
 
         {/* Mobile Menu */}
-        <Sheet>
+        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
           <SheetTrigger
             aria-label="Open menu"
             className="inline-flex h-9 w-9 items-center justify-center rounded-md text-foreground transition-colors hover:bg-secondary hover:text-primary md:hidden"
@@ -214,15 +228,27 @@ export default function Navbar() {
             </SheetHeader>
 
             <div className="mt-8 flex flex-col gap-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="rounded-lg px-3 py-3 text-sm font-medium text-foreground transition-colors hover:bg-secondary hover:text-primary"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const isActive =
+                  link.href === "/"
+                    ? pathname === "/"
+                    : pathname.startsWith(link.href);
+
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`rounded-lg px-3 py-3 text-sm transition-colors ${
+                      isActive
+                        ? "bg-secondary font-semibold text-primary"
+                        : "font-medium text-foreground hover:bg-secondary hover:text-primary"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
 
               <div className="my-3 h-px bg-border" />
 

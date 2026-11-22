@@ -12,11 +12,19 @@ export const postTuition = async (postTuitionData) => {
   return res.json();
 };
 
-export const getTuition = async () => {
-  const res = await fetch(`${BASE_URL}/tuition`, {
+export const getTuitions = async () => {
+  const res = await fetch(`${BASE_URL}/tuitions`, {
+    method: "GET",
     cache: "no-store",
   });
-  return res.json();
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to fetch tuitions");
+  }
+
+  return data;
 };
 
 export const getTuitionByTutorEmail = async (TutorEmail) => {

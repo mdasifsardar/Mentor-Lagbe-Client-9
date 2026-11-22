@@ -74,7 +74,7 @@ const menuItemsByRole = {
     },
     {
       title: "My Applications",
-      href: "/dashboard/student/applications",
+      href: "/dashboard/student/my-applications",
       icon: FileText,
     },
     {
