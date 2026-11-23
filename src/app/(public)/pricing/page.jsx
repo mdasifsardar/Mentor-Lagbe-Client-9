@@ -75,10 +75,10 @@ export default function PricingPage() {
         {plans.map((plan) => (
           <Card
             key={plan.name}
-            className={`h-full gap-0 rounded-2xl p-6 shadow-sm ${
+            className={`h-full gap-0 overflow-hidden rounded-2xl p-6 shadow-sm transition-all duration-300 ${
               plan.featured
-                ? "border-2 border-primary bg-primary/5"
-                : "border border-border bg-card"
+                ? "border-2 border-[#D9A441] bg-[#D9A441]/10 hover:shadow-xl"
+                : "border border-border bg-card hover:shadow-lg"
             }`}
           >
             <div className="flex items-center justify-between gap-2">
@@ -88,7 +88,7 @@ export default function PricingPage() {
 
               {plan.featured && (
                 <Badge className="border-0 bg-accent text-accent-foreground hover:bg-accent">
-                  Pro
+                  Popular
                 </Badge>
               )}
             </div>
@@ -108,7 +108,7 @@ export default function PricingPage() {
                   key={feature}
                   className="flex items-start gap-2 text-sm text-muted-foreground"
                 >
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#0F4D42]" />
                   {feature}
                 </li>
               ))}
@@ -118,7 +118,7 @@ export default function PricingPage() {
               <Button
                 render={<Link href="/signup" />}
                 nativeButton={false}
-                className="h-11 w-full cursor-pointer bg-secondary font-semibold text-secondary-foreground hover:bg-secondary/80"
+                className="h-11 w-full cursor-pointer rounded-xl bg-primary font-semibold text-primary-foreground hover:bg-[#2b8a76] hover:opacity-90"
               >
                 Get started
               </Button>

@@ -45,7 +45,7 @@ const AdminTransactions = () => {
         </p>
       </div>
 
-      <Card className="gap-0 rounded-2xl border border-border bg-card shadow-sm">
+      <Card className="gap-0 overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
         <CardContent className="flex items-center gap-4 p-5 sm:p-6">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/15 text-[#8A651F]">
             <Wallet className="h-6 w-6" />
@@ -110,7 +110,7 @@ const AdminTransactions = () => {
                   {transactions.map((item) => (
                     <tr
                       key={item._id}
-                      className="border-b border-border/70 last:border-0"
+                      className="border-b border-border/70 last:border-0 transition-colors hover:bg-muted/30"
                     >
                       <td className="px-5 py-4">
                         <p className="font-semibold text-foreground">
@@ -157,7 +157,7 @@ const AdminTransactions = () => {
             {transactions.map((item) => (
               <Card
                 key={item._id}
-                className="gap-0 rounded-2xl border border-border bg-card p-5 shadow-sm"
+                className="gap-0 rounded-2xl border border-border bg-card p-5 shadow-sm transition-all duration-300 hover:shadow-lg"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
