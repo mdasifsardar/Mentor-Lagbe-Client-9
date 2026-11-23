@@ -70,15 +70,15 @@ const BrowseTuitions = ({ tuitions = [], searchParams = {} }) => {
         <TuitionFilters />
 
         <section>
-        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <h2 className="text-lg font-semibold text-[#1E3A34] sm:text-xl">
-            Available Tuitions
-          </h2>
+          <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-lg font-semibold text-[#1E3A34] sm:text-xl">
+              Available Tuitions
+            </h2>
 
-          <p className="text-sm text-muted-foreground">
-            {tuitions.length} opportunities found
-          </p>
-        </div>
+            <p className="text-sm text-muted-foreground">
+              {tuitions.length} opportunities found
+            </p>
+          </div>
 
           {tuitions.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-[#1E3A34]/20 py-16 text-center">
