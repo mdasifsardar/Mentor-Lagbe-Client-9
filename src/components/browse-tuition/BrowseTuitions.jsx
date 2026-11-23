@@ -42,7 +42,10 @@ const BrowseTuitions = ({ tuitions = [], searchParams = {} }) => {
           tutor.
         </p>
 
-        <form onSubmit={handleSearch} className="mt-5 flex flex-col gap-3 sm:flex-row">
+        <form
+          onSubmit={handleSearch}
+          className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center"
+        >
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
@@ -56,7 +59,7 @@ const BrowseTuitions = ({ tuitions = [], searchParams = {} }) => {
 
           <Button
             type="submit"
-            className="h-11 cursor-pointer bg-primary px-6 font-semibold text-primary-foreground hover:bg-primary-dark"
+            className="h-11 w-full cursor-pointer bg-primary px-6 font-semibold text-primary-foreground hover:bg-primary-dark sm:w-auto"
           >
             Search
           </Button>
@@ -67,15 +70,15 @@ const BrowseTuitions = ({ tuitions = [], searchParams = {} }) => {
         <TuitionFilters />
 
         <section>
-          <div className="mb-5 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-lg font-semibold text-[#1E3A34] sm:text-xl">
-              Available Tuitions
-            </h2>
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-lg font-semibold text-[#1E3A34] sm:text-xl">
+            Available Tuitions
+          </h2>
 
-            <p className="text-sm text-muted-foreground">
-              {tuitions.length} opportunities found
-            </p>
-          </div>
+          <p className="text-sm text-muted-foreground">
+            {tuitions.length} opportunities found
+          </p>
+        </div>
 
           {tuitions.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-[#1E3A34]/20 py-16 text-center">
