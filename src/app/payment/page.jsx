@@ -136,11 +136,7 @@ const PaymentPage = () => {
                       <label
                         key={method.id}
                         htmlFor={`payment-${method.id}`}
-                        className={`flex cursor-pointer items-center gap-3 rounded-xl border p-4 transition-colors hover:border-primary/50 hover:bg-primary/5 ${
-                          index === 0
-                            ? "border-primary bg-primary/5"
-                            : "border-[#E8ECE9] bg-white"
-                        }`}
+                        className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#E8ECE9] bg-white p-4 transition-all hover:border-primary/50 hover:bg-primary/5 focus-within:border-primary focus-within:ring-2 focus-within:ring-ring/40 has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:checked]:ring-1 has-[:checked]:ring-primary/30"
                       >
                         <input
                           id={`payment-${method.id}`}
