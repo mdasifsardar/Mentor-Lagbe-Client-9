@@ -67,7 +67,8 @@ export default function PricingPage() {
         </h1>
 
         <p className="mt-3 text-sm text-muted-foreground sm:text-base">
-          Start free. Upgrade to Pro for unlimited access and priority placement.
+          Start free. Upgrade to Pro for unlimited access and priority
+          placement.
         </p>
       </div>
 
@@ -116,11 +117,16 @@ export default function PricingPage() {
 
             <div className="mt-6">
               <Button
-                render={<Link href="/signup" />}
-                nativeButton={false}
+                render={!plan.featured ? undefined : <Link href="/payment" />}
+                nativeButton={plan.featured ? false : true}
+                disabled={!plan.featured}
                 className="h-11 w-full cursor-pointer rounded-xl bg-primary font-semibold text-primary-foreground hover:bg-[#2b8a76] hover:opacity-90"
               >
-                Get started
+                {plan.name === "Student Free"
+                  ? "Student current plan"
+                  : plan.name === "Tutor Free"
+                    ? "Tutor current plan"
+                    : "Get Started"}
               </Button>
             </div>
           </Card>
