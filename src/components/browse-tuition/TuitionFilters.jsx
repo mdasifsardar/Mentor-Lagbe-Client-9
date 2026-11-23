@@ -43,7 +43,7 @@ const TuitionFilters = () => {
   const handleFilterChange = (groupId, label) => {
     const updatedFilters = {
       ...selectedFilters,
-      [groupId]: selectedFilters[groupId] === label ? "" : label,
+      [groupId]: label,
     };
 
     setSelectedFilters(updatedFilters);
@@ -62,37 +62,33 @@ const TuitionFilters = () => {
   };
 
   return (
-    <aside className="h-fit rounded-2xl border border-[#1E3A34]/10 bg-white p-5">
-      <h2 className="text-lg font-semibold text-[#1E3A34]">Filters</h2>
-
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
       {filterGroups.map((group) => (
-        <fieldset key={group.id} className="mt-6 border-0 p-0">
-          <legend className="text-[13px] font-medium text-[#1E3A34]">
+        <div key={group.id} className="flex flex-col gap-2">
+          <label
+            htmlFor={`browse-filter-${group.id}`}
+            className="text-sm font-semibold text-[#1E3A34]"
+          >
             {group.title}
-          </legend>
+          </label>
 
-          <div className="mt-3 space-y-3">
+          <select
+            id={`browse-filter-${group.id}`}
+            name={group.id}
+            value={selectedFilters[group.id] || ""}
+            onChange={(e) => handleFilterChange(group.id, e.target.value)}
+            className="h-11 w-44 cursor-pointer rounded-xl border-2 border-[#1E3A34]/20 bg-white px-4 text-sm font-medium text-[#1E3A34] shadow-sm transition-colors hover:border-[#0F4D42]/40 focus-visible:border-[#0F4D42] focus-visible:outline-none"
+          >
+            <option value="">All {group.title}</option>
             {group.options.map((option) => (
-              <label
-                key={option}
-                className="flex cursor-pointer items-center gap-3"
-              >
-                <input
-                  type="checkbox"
-                  name={group.id}
-                  value={option}
-                  checked={selectedFilters[group.id] === option}
-                  onChange={() => handleFilterChange(group.id, option)}
-                  className="size-4 accent-[#1E3A34]"
-                />
-
-                <span className="text-sm text-[#1E3A34]">{option}</span>
-              </label>
+              <option key={option} value={option}>
+                {option}
+              </option>
             ))}
-          </div>
-        </fieldset>
+          </select>
+        </div>
       ))}
-    </aside>
+    </div>
   );
 };
 

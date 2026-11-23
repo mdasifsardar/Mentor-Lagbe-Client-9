@@ -66,39 +66,37 @@ const BrowseTuitions = ({ tuitions = [], searchParams = {} }) => {
         </form>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
-        <TuitionFilters />
+      <TuitionFilters />
 
-        <section>
-          <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-lg font-semibold text-[#1E3A34] sm:text-xl">
-              Available Tuitions
+      <section>
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-lg font-semibold text-[#1E3A34] sm:text-xl">
+            Available Tuitions
+          </h2>
+
+          <p className="text-sm text-muted-foreground">
+            {tuitions.length} opportunities found
+          </p>
+        </div>
+
+        {tuitions.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-[#1E3A34]/20 py-16 text-center">
+            <h2 className="text-lg font-semibold text-[#1E3A34]">
+              No Tuitions Available
             </h2>
 
-            <p className="text-sm text-muted-foreground">
-              {tuitions.length} opportunities found
+            <p className="mt-2 text-sm text-muted-foreground">
+              Try changing your search or filters.
             </p>
           </div>
-
-          {tuitions.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-[#1E3A34]/20 py-16 text-center">
-              <h2 className="text-lg font-semibold text-[#1E3A34]">
-                No Tuitions Available
-              </h2>
-
-              <p className="mt-2 text-sm text-muted-foreground">
-                Try changing your search or filters.
-              </p>
-            </div>
-          ) : (
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {tuitions.map((tuition) => (
-                <TuitionCard key={tuition._id} tuition={tuition} />
-              ))}
-            </div>
-          )}
-        </section>
-      </div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            {tuitions.map((tuition) => (
+              <TuitionCard key={tuition._id} tuition={tuition} />
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 };
