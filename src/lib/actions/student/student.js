@@ -36,6 +36,24 @@ export const getStudentApplications = async (email) => {
   return data;
 };
 
+export const deleteApplication = async (applicationId) => {
+  const res = await fetch(
+    `${BASE_URL}/applications/${encodeURIComponent(applicationId)}`,
+    {
+      method: "DELETE",
+      cache: "no-store",
+    },
+  );
+
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to delete application");
+  }
+
+  return data;
+};
+
 export const applyForTuition = async (applicationData) => {
   const res = await fetch(`${BASE_URL}/applications`, {
     method: "POST",
