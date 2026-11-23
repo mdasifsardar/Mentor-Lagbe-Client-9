@@ -216,16 +216,16 @@ const PaymentPage = () => {
           </Card>
 
           {/* Order summary */}
-          <div className="space-y-6">
-            <Card className="h-full gap-0 overflow-hidden rounded-2xl border border-[#E2E8E5] bg-white shadow-sm">
-              <CardHeader className="border-b border-[#E8ECE9] p-5 sm:p-6">
+          <div className="space-y-4">
+            <Card className="gap-0 overflow-hidden rounded-2xl border border-[#E2E8E5] bg-white shadow-sm">
+              <CardHeader className="border-b border-[#E8ECE9] p-4 sm:p-5">
                 <CardTitle className="text-base font-bold text-[#17211F] sm:text-lg">
                   Order summary
                 </CardTitle>
               </CardHeader>
 
-              <CardContent className="p-5 sm:p-6">
-                <div className="flex items-start justify-between gap-3 rounded-xl border border-[#E8ECE9] bg-[#FAFBFA] p-4">
+              <CardContent className="p-4 sm:p-5">
+                <div className="flex items-start justify-between gap-3 rounded-xl border border-[#E8ECE9] bg-[#FAFBFA] p-3">
                   <div>
                     <p className="font-bold text-[#17211F]">Pro Plan</p>
 
@@ -239,7 +239,7 @@ const PaymentPage = () => {
                   </Badge>
                 </div>
 
-                <ul className="mt-5 space-y-3">
+                <ul className="mt-4 space-y-2">
                   {planBenefits.map((benefit) => (
                     <li
                       key={benefit}
@@ -251,7 +251,7 @@ const PaymentPage = () => {
                   ))}
                 </ul>
 
-                <div className="mt-6 space-y-2 border-t border-[#E8ECE9] pt-5 text-sm">
+                <div className="mt-4 space-y-1.5 border-t border-[#E8ECE9] pt-4 text-sm">
                   <div className="flex items-center justify-between text-[#66736F]">
                     <span>Subtotal</span>
                     <span className="font-medium text-[#17211F]">$10.00</span>
@@ -262,7 +262,7 @@ const PaymentPage = () => {
                     <span className="font-medium text-[#17211F]">$0.00</span>
                   </div>
 
-                  <div className="flex items-center justify-between border-t border-[#E8ECE9] pt-3 text-base font-bold text-[#17211F]">
+                  <div className="flex items-center justify-between border-t border-[#E8ECE9] pt-2 text-base font-bold text-[#17211F]">
                     <span>Total</span>
                     <span className="text-primary">$10.00</span>
                   </div>
@@ -270,13 +270,13 @@ const PaymentPage = () => {
 
                 <Button
                   type="button"
-                  className="mt-6 h-11 w-full cursor-pointer rounded-xl bg-primary font-semibold text-primary-foreground hover:bg-[#2b8a76] hover:opacity-90"
+                  className="mt-4 h-10 w-full cursor-pointer rounded-xl bg-primary font-semibold text-primary-foreground hover:bg-[#2b8a76] hover:opacity-90"
                 >
                   Pay $10.00
                   <ChevronRight className="h-4 w-4" />
                 </Button>
 
-                <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-[#66736F]">
+                <p className="mt-2 flex items-center justify-center gap-1.5 text-xs text-[#66736F]">
                   <Lock className="h-3.5 w-3.5 text-primary" />
                   Your payment information is kept secure.
                 </p>
