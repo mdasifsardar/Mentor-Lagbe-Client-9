@@ -8,8 +8,10 @@ const StudentDashboardPage = async () => {
   });
 
   return (
-    <section className="p-4 md:p-6 lg:p-8">
-      <StudentDashboard email={session?.user?.email} />
+    <section className="min-h-screen bg-[#F7F8F5] px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <StudentDashboard email={session?.user?.email} />
+      </div>
     </section>
   );
 };

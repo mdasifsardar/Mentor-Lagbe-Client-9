@@ -22,11 +22,13 @@ const MyApplicationsPage = async () => {
   );
 
   return (
-    <section className="p-4 md:p-6 lg:p-8">
-      <MyApplications
-        applications={applications}
-        tutorNames={tutorNames}
-      />
+    <section className="min-h-screen bg-[#F7F8F5] px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
+        <MyApplications
+          applications={applications}
+          tutorNames={tutorNames}
+        />
+      </div>
     </section>
   );
 };
