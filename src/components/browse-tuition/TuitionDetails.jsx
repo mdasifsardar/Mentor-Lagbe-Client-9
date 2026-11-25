@@ -26,71 +26,50 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-import { applyForTuition } from "@/lib/actions/student/student";
+import {
+  applyForTuition,
+  getStudentApplications,
+} from "@/lib/actions/student/student";
 import { formatClassLevel } from "@/lib/format";
+import { useRouter } from "next/navigation";
 
 const TuitionDetails = ({ tuition, user }) => {
+  //
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const [formData, setFormData] = useState({
-    studentPhone: "",
-    preferredSchedule: "",
-    studentNote: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const router = useRouter();
 
   const handleApply = async (e) => {
     e.preventDefault();
-
-    if (!user || user.role !== "student") {
-      toast.error("Only students can apply for tuition.");
-      return;
-    }
-
-    if (!formData.studentPhone.trim()) {
-      toast.error("Please enter your phone number.");
-      return;
-    }
-
-    if (!formData.preferredSchedule.trim()) {
-      toast.error("Please enter your preferred schedule.");
-      return;
-    }
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
 
     const applicationData = {
-      tuitionId: String(tuition._id),
-      studentName: user.name,
-      studentEmail: user.email,
-      studentPhone: formData.studentPhone,
-      preferredSchedule: formData.preferredSchedule,
-      studentNote: formData.studentNote,
+      ...data,
+      tuitionId: tuition._id,
+      studentName: user?.name || "",
+      studentEmail: user?.email || "",
     };
+
+    const applicationsData = await getStudentApplications(user.email);
+    const applicationCount = applicationsData.applications.length;
+
+    if (applicationCount >= 2 && user?.plan !== "pro") {
+      toast.error("You have reached the free application limit.");
+      setOpen(false);
+      router.push("/pricing");
+      return;
+    }
 
     try {
       setLoading(true);
-
       const result = await applyForTuition(applicationData);
 
-      toast.success(result.message || "Application submitted successfully!");
+      toast.success(result?.message || "Application submitted successfully!");
 
       setOpen(false);
-
-      setFormData({
-        studentPhone: "",
-        preferredSchedule: "",
-        studentNote: "",
-      });
     } catch (error) {
-      toast.error(error.message || "Failed to submit application.");
+      toast.error(error?.message || "Failed to submit application.");
     } finally {
       setLoading(false);
     }
@@ -247,8 +226,6 @@ const TuitionDetails = ({ tuition, user }) => {
 
                   <Input
                     name="studentPhone"
-                    value={formData.studentPhone}
-                    onChange={handleChange}
                     placeholder="Enter your phone number"
                     required
                   />
@@ -261,8 +238,6 @@ const TuitionDetails = ({ tuition, user }) => {
 
                   <Input
                     name="preferredSchedule"
-                    value={formData.preferredSchedule}
-                    onChange={handleChange}
                     placeholder="e.g. 5 PM - 7 PM"
                     required
                   />
@@ -273,8 +248,6 @@ const TuitionDetails = ({ tuition, user }) => {
 
                   <Textarea
                     name="studentNote"
-                    value={formData.studentNote}
-                    onChange={handleChange}
                     placeholder="Write something about yourself..."
                     rows={4}
                   />
