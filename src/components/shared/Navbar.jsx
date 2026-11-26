@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
+import Image from "next/image";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -56,8 +58,14 @@ export default function Navbar() {
 
   //        Sign out
   const handleSignOut = async () => {
-    await authClient.signOut();
-    router.refresh();
+    try {
+      await authClient.signOut();
+
+      toast.success("Sign out successful!");
+      router.push("/");
+    } catch (error) {
+      toast.error("Sign out failed!");
+    }
   };
 
   return (
@@ -99,172 +107,200 @@ export default function Navbar() {
         </nav>
 
         {/* User session */}
-        {user ? (
-          <>
-            {/* Logged In User UI */}
-            <div className="flex items-center gap-2">
-              {/* User Avatar & Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-primary/20 bg-primary/10 font-heading text-sm font-bold text-primary shadow-sm transition-all hover:border-primary hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 cursor-pointer">
-                  {user?.name.slice(0, 2)}
-                </DropdownMenuTrigger>
+        <div className="flex items-center gap-2">
+          {user ? (
+            <>
+              {/* Logged In User UI */}
+              <div className="flex items-center gap-2">
+                {/* User Avatar & Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border-2 border-primary/20 bg-primary/10 font-heading text-sm font-bold text-primary shadow-sm transition-all hover:border-primary hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 cursor-pointer">
+                    {user?.image ? (
+                      <Image
+                        src={user.image}
+                        alt={user.name || "User"}
+                        width={48}
+                        height={48}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      user?.name?.slice(0, 2)
+                    )}
+                  </DropdownMenuTrigger>
 
-                <DropdownMenuContent
-                  align="end"
-                  sideOffset={12}
-                  className="w-64 rounded-2xl border-border bg-card p-2 shadow-xl"
-                >
-                  {/* Profile Card */}
-                  <div className="rounded-xl border border-primary/10 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-3">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-white bg-primary font-heading text-lg font-bold text-primary-foreground shadow-sm">
-                        {user?.name.slice(0, 2)}
-                      </div>
+                  <DropdownMenuContent
+                    align="end"
+                    sideOffset={12}
+                    className="w-64 max-w-[calc(100vw-2rem)] rounded-2xl border-border bg-card p-2 shadow-xl"
+                  >
+                    {/* Profile Card */}
+                    <div className="rounded-xl border border-primary/10 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent p-3">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-primary font-heading text-lg font-bold text-primary-foreground shadow-sm">
+                          {user?.image ? (
+                            <Image
+                              src={user.image}
+                              alt={user.name}
+                              width={48}
+                              height={48}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            user?.name?.slice(0, 2)
+                          )}
+                        </div>
 
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-bold text-foreground">
-                          {user?.name}
-                        </p>
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-bold text-foreground">
+                            {user?.name}
+                          </p>
 
-                        <p className="truncate text-xs text-muted-foreground">
-                          {user?.email}
-                        </p>
+                          <p className="truncate text-xs text-muted-foreground">
+                            {user?.email}
+                          </p>
 
-                        <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
-                          <GraduationCap className="h-3 w-3" />
-                          {user?.role}
-                        </span>
+                          <span className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                            <GraduationCap className="h-3 w-3" />
+                            {user?.role}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Navigation Links */}
-                  <div className="space-y-1 py-2">
-                    <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-colors focus:bg-primary/10 focus:text-primary">
-                      <Link
-                        href={`/dashboard/${user?.role}`}
-                        className="flex w-full items-center gap-3"
+                    {/* Navigation Links */}
+                    <div className="space-y-1 py-2">
+                      <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-colors focus:bg-primary/10 focus:text-primary">
+                        <Link
+                          href={`/dashboard/${user?.role}`}
+                          className="flex w-full items-center gap-3"
+                        >
+                          <LayoutDashboard className="h-4 w-4 text-primary" />
+                          Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+
+                      <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-colors focus:bg-primary/10 focus:text-primary">
+                        <Link
+                          href="/dashboard/profile"
+                          className="flex w-full items-center gap-3"
+                        >
+                          <User className="h-4 w-4 text-primary" />
+                          My Profile
+                        </Link>
+                      </DropdownMenuItem>
+                    </div>
+
+                    <DropdownMenuSeparator className="bg-border" />
+
+                    {/* Sign Out */}
+                    <div className="p-1">
+                      <DropdownMenuItem
+                        onClick={handleSignOut}
+                        className="cursor-pointer justify-center rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm font-semibold text-red-600 transition-all hover:bg-red-100 focus:bg-red-100 focus:text-red-700"
                       >
-                        <LayoutDashboard className="h-4 w-4 text-primary" />
-                        Dashboard
-                      </Link>
-                    </DropdownMenuItem>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Sign Out
+                      </DropdownMenuItem>
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
 
-                    <DropdownMenuItem className="cursor-pointer rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-colors focus:bg-primary/10 focus:text-primary">
-                      <Link
-                        href="/dashboard/profile"
-                        className="flex w-full items-center gap-3"
-                      >
-                        <User className="h-4 w-4 text-primary" />
-                        My Profile
-                      </Link>
-                    </DropdownMenuItem>
-                  </div>
-
-                  <DropdownMenuSeparator className="bg-border" />
-
-                  {/* Sign Out */}
-                  <div className="p-1">
-                    <DropdownMenuItem
-                      onClick={handleSignOut}
-                      className="cursor-pointer justify-center rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm font-semibold text-red-600 transition-all hover:bg-red-100 focus:bg-red-100 focus:text-red-700"
-                    >
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Sign Out
-                    </DropdownMenuItem>
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* User Information */}
-              <div className="hidden text-right sm:block">
-                <p className="text-sm font-bold text-foreground">
-                  {user?.name}
-                </p>
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
-            {/* Desktop Auth Buttons */}
-            <div className="hidden items-center gap-3 md:flex">
-              <Button
-                variant="ghost"
-                className="font-medium text-foreground hover:bg-secondary hover:text-primary"
-              >
-                <Link href="/signin">Sign In</Link>
-              </Button>
-
-              <Button className="bg-primary font-medium text-primary-foreground hover:bg-[#0f4d42]">
-                <Link href="/signup">Sign Up</Link>
-              </Button>
-            </div>
-          </>
-        )}
-
-        {/* Mobile Menu */}
-        <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-          <SheetTrigger
-            aria-label="Open menu"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md text-foreground transition-colors hover:bg-secondary hover:text-primary md:hidden"
-          >
-            <Menu className="h-5 w-5" />
-          </SheetTrigger>
-
-          <SheetContent
-            side="right"
-            className="w-[300px] border-border bg-card sm:w-[360px]"
-          >
-            <SheetHeader>
-              <SheetTitle className="flex items-center gap-2 text-left">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-                  <GraduationCap className="h-5 w-5 text-primary-foreground" />
+                {/* User Information */}
+                <div className="hidden text-right sm:block">
+                  <p className="text-sm font-bold text-foreground">
+                    {user?.name}
+                  </p>
                 </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Desktop Auth Buttons */}
+              <div className="hidden items-center gap-3 md:flex">
+                <Button
+                  variant="ghost"
+                  className="font-medium text-foreground hover:bg-secondary hover:text-primary"
+                >
+                  <Link href="/signin">Sign In</Link>
+                </Button>
 
-                <span className="font-heading text-lg font-bold">
-                  Mentor<span className="text-primary">Lagbe</span>
-                </span>
-              </SheetTitle>
-            </SheetHeader>
+                <Button className="bg-primary font-medium text-primary-foreground hover:bg-[#0f4d42]">
+                  <Link href="/signup">Sign Up</Link>
+                </Button>
+              </div>
+            </>
+          )}
 
-            <div className="mt-8 flex flex-col gap-2">
-              {navLinks.map((link) => {
-                const isActive =
-                  link.href === "/"
-                    ? pathname === "/"
-                    : pathname.startsWith(link.href);
+          {/* Mobile Menu */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger
+              aria-label="Open menu"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-md text-foreground transition-colors hover:bg-secondary hover:text-primary md:hidden"
+            >
+              <Menu className="h-5 w-5" />
+            </SheetTrigger>
 
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`rounded-lg px-3 py-3 text-sm transition-colors ${
-                      isActive
-                        ? "bg-secondary font-semibold text-primary"
-                        : "font-medium text-foreground hover:bg-secondary hover:text-primary"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                );
-              })}
+            <SheetContent
+              side="right"
+              className="w-[min(300px,calc(100vw-2rem))] border-border bg-card sm:w-[360px]"
+            >
+              <SheetHeader>
+                <SheetTitle className="flex items-center gap-2 text-left">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
+                    <GraduationCap className="h-5 w-5 text-primary-foreground" />
+                  </div>
 
-              <div className="my-3 h-px bg-border" />
+                  <span className="font-heading text-lg font-bold">
+                    Mentor<span className="text-primary">Lagbe</span>
+                  </span>
+                </SheetTitle>
+              </SheetHeader>
 
-              <Button
-                variant="outline"
-                className="w-full border-border cursor-pointer"
-              >
-                <Link href="/signin">Sign In</Link>
-              </Button>
+              <div className="mt-8 flex flex-col gap-2">
+                {navLinks.map((link) => {
+                  const isActive =
+                    link.href === "/"
+                      ? pathname === "/"
+                      : pathname.startsWith(link.href);
 
-              <Button className="w-full bg-primary text-primary-foreground hover:bg-[#0f4d42] cursor-pointer">
-                <Link href="/signup">Sign Up</Link>
-              </Button>
-            </div>
-          </SheetContent>
-        </Sheet>
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`rounded-lg px-3 py-3 text-sm transition-colors ${
+                        isActive
+                          ? "bg-secondary font-semibold text-primary"
+                          : "font-medium text-foreground hover:bg-secondary hover:text-primary"
+                      }`}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
+
+                <div className="my-3 h-px bg-border" />
+
+                {user ? (
+                  <></>
+                ) : (
+                  <>
+                    <Button
+                      variant="outline"
+                      className="w-full border-border cursor-pointer"
+                    >
+                      <Link href="/signin">Sign In</Link>
+                    </Button>
+
+                    <Button className="w-full bg-primary text-primary-foreground hover:bg-[#0f4d42] cursor-pointer">
+                      <Link href="/signup">Sign Up</Link>
+                    </Button>
+                  </>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );

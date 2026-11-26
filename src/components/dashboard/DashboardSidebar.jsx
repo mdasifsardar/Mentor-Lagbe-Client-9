@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Plus,
@@ -31,6 +31,8 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
+import { Button } from "../ui/button";
+import { toast } from "sonner";
 
 const menuItemsByRole = {
   tutor: [
@@ -117,7 +119,18 @@ export default function DashboardSidebar() {
   const pathname = usePathname();
   const { data: session } = authClient.useSession();
   const role = session?.user?.role;
+  const router = useRouter();
 
+  const handleSignOut = async () => {
+    try {
+      await authClient.signOut();
+
+      toast.success("Sign out successful!");
+      router.push("/");
+    } catch (error) {
+      toast.error("Sign out failed!");
+    }
+  };
   return (
     <Sidebar collapsible="icon" className="border-r border-border">
       {/* Logo + Sidebar Toggle */}
@@ -192,19 +205,29 @@ export default function DashboardSidebar() {
       <SidebarFooter className="border-t border-border p-3">
         {/* Free Plan */}
         <div className="mb-2 rounded-xl border border-[#D9A441]/25 bg-[#D9A441]/10 p-4 group-data-[collapsible=icon]:hidden">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#D9A441]/20">
-              <Crown className="h-4 w-4 text-[#A87520]" />
-            </div>
+          {role === "admin" ? (
+            <p className="truncate text-[12px] text-muted-foreground">
+              Admin also in pro plan
+            </p>
+          ) : (
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#D9A441]/20">
+                <Crown className="h-4 w-4 text-[#A87520]" />
+              </div>
 
-            <div className="min-w-0">
-              <p className="text-xs font-bold text-foreground">Free Plan</p>
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-foreground capitalize">
+                  {session?.user?.plan} Plan
+                </p>
 
-              <p className="truncate text-[10px] text-muted-foreground">
-                Up to 2 tuition posts
-              </p>
+                <p className="truncate text-[10px] text-muted-foreground">
+                  {session?.user?.plan === "pro"
+                    ? `Unlimited ${role} posts`
+                    : `Up to 2 ${role} posts`}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
 
           <Link
             href="/pricing"
@@ -219,14 +242,13 @@ export default function DashboardSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
+              onClick={handleSignOut}
               tooltip="Sign Out"
               className="h-10 cursor-pointer justify-center rounded-xl border border-red-200 bg-red-50 px-3 text-sm font-semibold text-red-600 transition-all hover:bg-red-100 hover:text-red-700 focus:bg-red-100 focus:text-red-700"
             >
-              <Link href="/" className="flex w-full items-center gap-3">
-                <LogOut className="h-4 w-4 shrink-0" />
-                <span className="truncate">Sign Out</span>
-                <ChevronRight className="ml-auto h-4 w-4 shrink-0 group-data-[collapsible=icon]:hidden" />
-              </Link>
+              <LogOut className="h-4 w-4 shrink-0" />
+              <span className="truncate">Sign Out</span>
+              <ChevronRight className="ml-auto h-4 w-4 shrink-0 group-data-[collapsible=icon]:hidden" />
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

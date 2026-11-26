@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Check, Clock3, MapPin, Search, X } from "lucide-react";
 import { toast } from "sonner";
@@ -30,6 +31,7 @@ const filters = [
 ];
 
 const AdminTuitions = () => {
+  const router = useRouter();
   const [tuitions, setTuitions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
@@ -64,6 +66,7 @@ const AdminTuitions = () => {
     try {
       const data = await updateTuitionApproval(id, approvalStatus);
       toast.success(data.message || "Tuition updated");
+      router.refresh();
     } catch (error) {
       setTuitions(previous);
       toast.error(error.message || "Failed to update tuition");

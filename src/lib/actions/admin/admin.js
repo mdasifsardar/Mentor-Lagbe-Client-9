@@ -1,7 +1,9 @@
+import { authFetch } from "@/lib/auth-client";
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const request = async (path, options = {}) => {
-  const res = await fetch(`${BASE_URL}${path}`, {
+  const res = await authFetch(`${BASE_URL}${path}`, {
     ...options,
     cache: "no-store",
     headers: {
@@ -20,6 +22,13 @@ const request = async (path, options = {}) => {
 };
 
 export const getAdminStats = () => request("/admin/stats");
+
+export const getRevenueCount = () => request("/admin/revenue");
+
+export const getReportedRevenue = async () => {
+  const data = await getRevenueCount();
+  return data.totalRevenue || 0;
+};
 
 export const getAdminUsers = () => request("/admin/users");
 

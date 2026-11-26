@@ -1,15 +1,18 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Camera,
   CheckCircle2,
   Edit3,
   Mail,
-  MapPin,
   Phone,
   ShieldCheck,
   UserRound,
 } from "lucide-react";
+import Image from "next/image";
+import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,17 +21,127 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { authClient, updateProfile, uploadImage } from "@/lib/auth-client";
+import { formatDate } from "@/lib/format";
+
+const formFromUser = (user) => ({
+  name: user?.name || "",
+  image: user?.image || "",
+  phone: user?.phone || "",
+  bio: user?.bio || "",
+});
 
 const Profile = () => {
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
+  const currentUser = session?.user;
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
+  const [form, setForm] = useState(null);
+
+  if (isPending) {
+    return (
+      <section className="flex min-h-screen items-center justify-center bg-[#F7F8F5]">
+        <p className="text-sm text-[#66736F]">Loading profile...</p>
+      </section>
+    );
+  }
+
+  const displayed = form ?? formFromUser(currentUser);
+
   const user = {
-    name: "",
-    email: "",
-    role: "",
-    phone: "",
-    location: "",
-    bio: "",
-    plan: "",
-    joined: "",
+    id: currentUser?.id || "Not provided",
+    name: isEditing ? displayed.name : currentUser?.name || "Not provided",
+    email: currentUser?.email || "Not provided",
+    image: isEditing ? displayed.image : currentUser?.image || "",
+    role: currentUser?.role || "student",
+    phone: isEditing ? displayed.phone : currentUser?.phone || "Not provided",
+    bio: isEditing ? displayed.bio : currentUser?.bio || "Not provided",
+    plan: currentUser?.plan || "free",
+    joined: formatDate(currentUser?.createdAt),
+    emailVerified: Boolean(currentUser?.emailVerified),
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...(prev ?? formFromUser(currentUser)),
+      [name]: value,
+    }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be 5 MB or less.");
+      return;
+    }
+
+    setImageFile(file);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setForm((prev) => ({
+        ...(prev ?? formFromUser(currentUser)),
+        image: reader.result,
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleEditToggle = () => {
+    if (isEditing) {
+      setForm(null);
+      setImageFile(null);
+    } else {
+      setForm(formFromUser(currentUser));
+    }
+
+    setIsEditing((prev) => !prev);
+  };
+
+  const handleSave = async () => {
+    if (!displayed.name.trim()) {
+      toast.error("Name cannot be empty.");
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+      let imageUrl = displayed.image;
+
+      if (imageFile) {
+        imageUrl = await uploadImage(imageFile);
+      }
+
+      await updateProfile({
+        name: displayed.name.trim(),
+        image: imageUrl,
+        phone: displayed.phone.trim(),
+        bio: displayed.bio.trim(),
+      });
+
+      setForm(null);
+      setImageFile(null);
+      setIsEditing(false);
+      toast.success("Profile updated successfully!");
+      router.refresh();
+    } catch (err) {
+      toast.error(err?.message || "Failed to update profile.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -59,15 +172,36 @@ const Profile = () => {
               <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
                 <div className="relative">
                   <div className="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-[#E8F0ED] text-primary shadow-md">
-                    <UserRound className="h-12 w-12" />
+                    {user.image ? (
+                      <Image
+                        src={user.image}
+                        alt={user.name}
+                        width={112}
+                        height={112}
+                        unoptimized
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <UserRound className="h-12 w-12" />
+                    )}
                   </div>
 
-                  <button
-                    type="button"
-                    className="absolute bottom-1 right-1 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-primary text-white shadow-sm transition hover:bg-primary-dark"
-                  >
-                    <Camera className="h-4 w-4" />
-                  </button>
+                  {isEditing && (
+                    <label
+                      htmlFor="profile-image"
+                      className="absolute bottom-1 right-1 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border-2 border-white bg-primary text-white shadow-sm transition hover:bg-primary-dark"
+                    >
+                      <Camera className="h-4 w-4" />
+                    </label>
+                  )}
+
+                  <input
+                    id="profile-image"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
                 </div>
 
                 <div className="pb-1">
@@ -76,21 +210,23 @@ const Profile = () => {
                       {user.name}
                     </h2>
 
-                    <Badge className="border-0 bg-primary/10 text-primary hover:bg-primary/10">
+                    <Badge className="border-0 bg-primary/10 capitalize text-primary hover:bg-primary/10">
                       {user.role}
                     </Badge>
                   </div>
 
-                  <p className="mt-1 text-sm text-[#66736F]">{user.email}</p>
+                  <p className="mt-1 break-all text-sm text-[#66736F]">{user.email}</p>
                 </div>
               </div>
 
               <Button
+                type="button"
                 variant="outline"
+                onClick={handleEditToggle}
                 className="h-10 gap-2 border-[#DDE4E1] bg-white text-[#17211F] hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
               >
                 <Edit3 className="h-4 w-4" />
-                Edit Profile
+                {isEditing ? "Cancel" : "Edit Profile"}
               </Button>
             </div>
           </CardContent>
@@ -126,8 +262,10 @@ const Profile = () => {
 
                   <Input
                     id="name"
+                    name="name"
                     value={user.name}
-                    readOnly
+                    onChange={handleChange}
+                    readOnly={!isEditing}
                     className="h-11 border-[#DDE4E1] bg-[#FAFBFA] pl-10 text-[#17211F]"
                   />
                 </div>
@@ -155,7 +293,7 @@ const Profile = () => {
                 </div>
               </div>
 
-              {/* Phone + Location */}
+              {/* Phone + User ID */}
               <div className="grid gap-5 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label
@@ -170,8 +308,10 @@ const Profile = () => {
 
                     <Input
                       id="phone"
+                      name="phone"
                       value={user.phone}
-                      readOnly
+                      onChange={handleChange}
+                      readOnly={!isEditing}
                       className="h-11 border-[#DDE4E1] bg-[#FAFBFA] pl-10 text-[#17211F]"
                     />
                   </div>
@@ -179,22 +319,45 @@ const Profile = () => {
 
                 <div className="space-y-2">
                   <Label
-                    htmlFor="location"
+                    htmlFor="userId"
                     className="text-sm font-semibold text-[#17211F]"
                   >
-                    Location
+                    User ID
                   </Label>
 
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#88928F]" />
+                    <ShieldCheck className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#88928F]" />
 
                     <Input
-                      id="location"
-                      value={user.location}
+                      id="userId"
+                      value={user.id}
                       readOnly
                       className="h-11 border-[#DDE4E1] bg-[#FAFBFA] pl-10 text-[#17211F]"
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Image URL */}
+              <div className="space-y-2">
+                <Label
+                  htmlFor="imageUrl"
+                  className="text-sm font-semibold text-[#17211F]"
+                >
+                  Image URL
+                </Label>
+
+                <div className="relative">
+                  <Camera className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#88928F]" />
+
+                  <Input
+                    id="imageUrl"
+                    name="image"
+                    value={user.image}
+                    onChange={handleChange}
+                    readOnly={!isEditing}
+                    className="h-11 border-[#DDE4E1] bg-[#FAFBFA] pl-10 text-[#17211F]"
+                  />
                 </div>
               </div>
 
@@ -209,16 +372,23 @@ const Profile = () => {
 
                 <Textarea
                   id="bio"
+                  name="bio"
                   value={user.bio}
-                  readOnly
+                  onChange={handleChange}
+                  readOnly={!isEditing}
                   className="min-h-28 resize-none border-[#DDE4E1] bg-[#FAFBFA] text-sm leading-6 text-[#17211F]"
                 />
               </div>
 
               {/* Save */}
               <div className="flex justify-end border-t border-[#E8ECE9] pt-5">
-                <Button className="h-10 bg-primary font-semibold text-primary-foreground hover:bg-primary-dark">
-                  Save Changes
+                <Button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={!isEditing || saving}
+                  className="h-10 bg-primary font-semibold text-primary-foreground hover:bg-primary-dark"
+                >
+                  {saving ? "Saving..." : "Save Changes"}
                 </Button>
               </div>
             </CardContent>
@@ -243,7 +413,7 @@ const Profile = () => {
                       Account Role
                     </p>
 
-                    <p className="mt-1 text-sm font-semibold text-[#17211F]">
+                    <p className="mt-1 text-sm font-semibold capitalize text-[#17211F]">
                       {user.role}
                     </p>
                   </div>
@@ -262,14 +432,14 @@ const Profile = () => {
                       Current Plan
                     </p>
 
-                    <p className="mt-1 text-sm font-semibold text-[#17211F]">
+                    <p className="mt-1 text-sm font-semibold capitalize text-[#17211F]">
                       {user.plan}
                     </p>
                   </div>
 
                   <Badge
                     variant="outline"
-                    className="border-[#E2E8E5] bg-[#FAFBFA] text-[#66736F]"
+                    className="border-[#E2E8E5] bg-[#FAFBFA] capitalize text-[#66736F]"
                   >
                     {user.plan} Plan
                   </Badge>
@@ -300,11 +470,15 @@ const Profile = () => {
 
                   <div>
                     <p className="text-sm font-bold text-emerald-800">
-                      Account Verified
+                      {user.emailVerified
+                        ? "Account Verified"
+                        : "Email Not Verified"}
                     </p>
 
                     <p className="mt-1 text-xs leading-5 text-emerald-700">
-                      Your email address has been successfully verified.
+                      {user.emailVerified
+                        ? "Your email address has been successfully verified."
+                        : "Please verify your email address."}
                     </p>
                   </div>
                 </div>

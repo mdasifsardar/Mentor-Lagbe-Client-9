@@ -34,6 +34,7 @@ export async function POST(req) {
         userId: userSession?.user?.id,
       },
       success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/payment/cancel`,
 
       integration_identifier: "Mentor_Lagbe_Web_001",
     });

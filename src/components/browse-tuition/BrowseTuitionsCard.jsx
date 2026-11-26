@@ -17,13 +17,14 @@ const TuitionCard = ({ tuition }) => {
           src={tuition.bannerImage}
           alt={tuition.title}
           fill
+          loading="eager"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
 
         {/* Location */}
-        <div className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full bg-[#12352C]/90 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
-          <MapPin className="h-3.5 w-3.5 text-[#C89B5A]" />
+        <div className="absolute bottom-3 left-3 flex max-w-[85%] min-w-0 items-center gap-1.5 truncate rounded-full bg-[#12352C]/90 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
+          <MapPin className="h-3.5 w-3.5 shrink-0 text-[#C89B5A]" />
           {tuition.location || "Location not specified"}
         </div>
       </div>
@@ -63,7 +64,7 @@ const TuitionCard = ({ tuition }) => {
       </CardContent>
 
       {/* Footer */}
-      <CardFooter className="flex items-center justify-between gap-3 border-t border-[#1E3A34]/10 px-5 py-4">
+      <CardFooter className="flex flex-wrap items-center justify-between gap-3 border-t border-[#1E3A34]/10 px-5 py-4">
         <div>
           <p className="text-xs text-muted-foreground">Monthly Fee</p>
 

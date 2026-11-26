@@ -8,23 +8,49 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useState } from "react";
 import { toast } from "sonner";
-import { authClient } from "@/lib/auth-client";
+import { authClient, getAuthToken } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
 const SignInForm = () => {
   //              State management
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   //              Sign in management
   const handleSignIn = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
+    const email = String(formData.get("email") || "").trim();
+    const password = String(formData.get("password") || "");
+
+    //              Simple form validation
+    const nextErrors = {};
+
+    if (!email) {
+      nextErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      nextErrors.email = "Enter a valid email address.";
+    }
+
+    if (!password) {
+      nextErrors.password = "Password is required.";
+    }
+
+    setErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      toast.error("Please check the highlighted fields.");
+      return;
+    }
+
+    setLoading(true);
 
     try {
-      const { data: user, error } = await authClient.signIn.email({
-        ...data,
+      const { data: result, error } = await authClient.signIn.email({
+        email,
+        password,
       });
 
       if (error) {
@@ -32,10 +58,17 @@ const SignInForm = () => {
         return;
       }
 
-      toast.success(user?.message || "Sign in successfull!");
-      router.push("/");
+      //              Save the JWT for protected API requests
+      await getAuthToken();
+
+      toast.success(result?.message || "Sign in successful!");
+
+      const role = result?.user?.role || "student";
+      router.push(`/dashboard/${role}`);
     } catch (err) {
       toast.error(err?.message || "Something went wrong!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,7 +93,7 @@ const SignInForm = () => {
       </CardHeader>
 
       <CardContent>
-        <form onSubmit={handleSignIn} className="space-y-5">
+        <form onSubmit={handleSignIn} noValidate className="space-y-5">
           {/* Email */}
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -71,8 +104,13 @@ const SignInForm = () => {
               type="email"
               placeholder="you@example.com"
               className="h-11"
+              onChange={() => setErrors((prev) => ({ ...prev, email: "" }))}
               required
             />
+
+            {errors.email && (
+              <p className="text-xs text-destructive">{errors.email}</p>
+            )}
           </div>
 
           {/* Password */}
@@ -95,13 +133,14 @@ const SignInForm = () => {
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 className="h-11 pr-11"
+                onChange={() => setErrors((prev) => ({ ...prev, password: "" }))}
                 required
               />
 
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground"
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -110,14 +149,19 @@ const SignInForm = () => {
                 )}
               </button>
             </div>
+
+            {errors.password && (
+              <p className="text-xs text-destructive">{errors.password}</p>
+            )}
           </div>
 
           {/* Submit Button */}
           <Button
             type="submit"
+            disabled={loading}
             className="h-11 w-full bg-primary font-medium text-primary-foreground hover:bg-[#0f4d42]"
           >
-            Sign In
+            {loading ? "Signing in..." : "Sign In"}
           </Button>
         </form>
 

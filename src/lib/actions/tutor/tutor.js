@@ -1,9 +1,11 @@
+import { authFetch } from "@/lib/auth-client";
+
 // Base API URL fallback set to local Express server on port 5000
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 // POST /add-tuition -> Create a new tuition post
 export const postTuition = async (postTuitionData) => {
-  const res = await fetch(`${BASE_URL}/add-tuition`, {
+  const res = await authFetch(`${BASE_URL}/add-tuition`, {
     method: "POST",
     cache: "no-store",
     headers: {
@@ -62,7 +64,7 @@ export const getApplicationsForTutor = async (tutorEmail) => {
 
 // PATCH /tuition/:id -> Update active status (isActive) of a tuition
 export const updatePostIsActive = async (id, isActive) => {
-  const res = await fetch(`${BASE_URL}/tuition/${id}`, {
+  const res = await authFetch(`${BASE_URL}/tuition/${id}`, {
     method: "PATCH",
     cache: "no-store",
     headers: {
@@ -78,7 +80,7 @@ export const updatePostIsActive = async (id, isActive) => {
 
 // PATCH /update-tuition/:id -> Update tuition details by ID
 export const updateTutionData = async ({ id, ...updateTuition }) => {
-  const res = await fetch(`${BASE_URL}/update-tuition/${id}`, {
+  const res = await authFetch(`${BASE_URL}/update-tuition/${id}`, {
     method: "PATCH",
     cache: "no-store",
     headers: {
@@ -92,9 +94,11 @@ export const updateTutionData = async ({ id, ...updateTuition }) => {
 
 // DELETE /delete-tuition/:id -> Delete a tuition post by ID
 export const deleteTuitionData = async (id) => {
-  const res = await fetch(`${BASE_URL}/delete-tuition/${id}`, {
+  const res = await authFetch(`${BASE_URL}/delete-tuition/${id}`, {
     method: "DELETE",
     cache: "no-store",
+    headers: {
+    },
   });
 
   return res.json();
@@ -118,7 +122,7 @@ export const getTuitionById = async (id) => {
 
 // PATCH /applications/:id -> Update application status by ID
 export const updateApplicationStatus = async (id, status) => {
-  const res = await fetch(`${BASE_URL}/applications/${id}`, {
+  const res = await authFetch(`${BASE_URL}/applications/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",

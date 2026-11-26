@@ -1,3 +1,5 @@
+import { authFetch } from "@/lib/auth-client";
+
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getStudentDashboard = async (email) => {
@@ -37,11 +39,13 @@ export const getStudentApplications = async (email) => {
 };
 
 export const deleteApplication = async (applicationId) => {
-  const res = await fetch(
+  const res = await authFetch(
     `${BASE_URL}/applications/${encodeURIComponent(applicationId)}`,
     {
       method: "DELETE",
       cache: "no-store",
+      headers: {
+      },
     },
   );
 
@@ -55,8 +59,9 @@ export const deleteApplication = async (applicationId) => {
 };
 
 export const applyForTuition = async (applicationData) => {
-  const res = await fetch(`${BASE_URL}/applications`, {
+  const res = await authFetch(`${BASE_URL}/applications`, {
     method: "POST",
+    cache: "no-store",
     headers: {
       "Content-Type": "application/json",
     },

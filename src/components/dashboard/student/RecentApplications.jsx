@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const RecentApplications = ({ applications = [] }) => {
   return (
     <Card className="shadow-sm">
-      <CardHeader className="flex flex-row items-center justify-between gap-3">
+      <CardHeader className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
         <CardTitle className="text-lg">Recent Applications</CardTitle>
 
         <Button variant="outline" size="sm">
@@ -51,7 +51,7 @@ const RecentApplications = ({ applications = [] }) => {
                     Subject: {application.subject}
                   </p>
 
-                  <p className="text-sm text-muted-foreground">
+                  <p className="break-all text-sm text-muted-foreground">
                     Tutor: {application.tutorEmail}
                   </p>
 

@@ -162,7 +162,7 @@ const TuitionDetails = ({ tuition, user }) => {
           Tuition Description
         </h2>
 
-        <p className="whitespace-pre-line leading-7 text-gray-600">
+        <p className="whitespace-pre-line break-words leading-7 text-gray-600">
           {tuition.description || "No description provided."}
         </p>
       </div>
@@ -178,12 +178,14 @@ const TuitionDetails = ({ tuition, user }) => {
             <UserRound size={24} />
           </div>
 
-          <div>
-            <p className="font-semibold text-[#1E3A34]">
+          <div className="min-w-0">
+            <p className="break-words font-semibold text-[#1E3A34]">
               {tuition.tutorName || "Tutor"}
             </p>
 
-            <p className="text-sm text-gray-500">{tuition.tutorEmail}</p>
+            <p className="break-all text-sm text-gray-500">
+              {tuition.tutorEmail}
+            </p>
           </div>
         </div>
       </div>
@@ -203,7 +205,7 @@ const TuitionDetails = ({ tuition, user }) => {
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger
               render={
-                <Button className="bg-[#176B5B] text-white hover:bg-[#125447]" />
+                <Button className="w-full justify-center bg-[#176B5B] text-white hover:bg-[#125447] sm:w-auto" />
               }
             >
               Apply for Tuition
@@ -290,7 +292,7 @@ const InfoItem = ({ icon, label, value }) => {
 
       <p className="text-sm text-gray-500">{label}</p>
 
-      <p className="mt-1 font-semibold text-[#1E3A34]">
+      <p className="mt-1 break-words font-semibold text-[#1E3A34]">
         {value || "Not specified"}
       </p>
     </div>

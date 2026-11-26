@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { updateApplicationStatus } from "@/lib/actions/tutor/tutor";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const formatAppliedAt = (value) => {
   if (!value) return "";
@@ -30,6 +31,8 @@ const formatAppliedAt = (value) => {
 };
 
 const Applicants = ({ applications }) => {
+  const router = useRouter();
+
   // ---------------- Summary
   const totalApplicants = applications.length;
 
@@ -46,6 +49,7 @@ const Applicants = ({ applications }) => {
       const res = await updateApplicationStatus(id, status);
 
       toast.success(res?.message || `Application ${status} successfully`);
+      router.refresh();
     } catch (error) {
       toast.error(error.message || "Something went wrong");
     }
@@ -139,14 +143,14 @@ const Applicants = ({ applications }) => {
                         <UserRound className="h-5 w-5" />
                       </div>
 
-                      <div>
-                        <CardTitle className="text-base font-bold text-[#17211F] sm:text-lg">
+                      <div className="min-w-0">
+                        <CardTitle className="break-words text-base font-bold text-[#17211F] sm:text-lg">
                           {application.studentName}
                         </CardTitle>
 
                         <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-[#66736F]">
-                          <span className="flex items-center gap-1">
-                            <Mail className="h-3.5 w-3.5" />
+                          <span className="flex min-w-0 items-center gap-1 break-all">
+                            <Mail className="h-3.5 w-3.5 shrink-0" />
                             {application.studentEmail}
                           </span>
 
@@ -204,7 +208,7 @@ const Applicants = ({ applications }) => {
                       </span>
                     </div>
 
-                    <div className="mt-3 flex items-center gap-1.5 text-xs text-[#66736F]">
+                    <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs text-[#66736F]">
                       <CalendarDays className="h-3.5 w-3.5" />
                       Applied {formatAppliedAt(application.appliedAt)}
                     </div>
@@ -217,7 +221,7 @@ const Applicants = ({ applications }) => {
                         Preferred Schedule
                       </p>
 
-                      <p className="mt-1 text-sm font-semibold text-[#17211F]">
+                      <p className="mt-1 break-words text-sm font-semibold text-[#17211F]">
                         {application.preferredSchedule}
                       </p>
                     </div>
@@ -227,7 +231,7 @@ const Applicants = ({ applications }) => {
                         Student Note
                       </p>
 
-                      <p className="mt-1 text-sm leading-6 text-[#66736F]">
+                      <p className="mt-1 break-words text-sm leading-6 text-[#66736F]">
                         {application.studentNote}
                       </p>
                     </div>
@@ -241,7 +245,7 @@ const Applicants = ({ applications }) => {
                           onClick={() =>
                             handleAcceptReject(application._id, "accepted")
                           }
-                          className="h-9 gap-2 bg-primary"
+                          className="h-9 gap-2 bg-primary cursor-pointer"
                         >
                           <CheckCircle2 className="h-3.5 w-3.5" />
                           Accept
@@ -252,7 +256,7 @@ const Applicants = ({ applications }) => {
                             handleAcceptReject(application._id, "rejected")
                           }
                           variant="outline"
-                          className="h-9 gap-2 border-red-200 text-red-600"
+                          className="h-9 gap-2 border-red-200 text-red-600 cursor-pointer"
                         >
                           <XCircle className="h-3.5 w-3.5" />
                           Reject
@@ -266,7 +270,7 @@ const Applicants = ({ applications }) => {
                           handleAcceptReject(application._id, "rejected")
                         }
                         variant="outline"
-                        className="h-9 gap-2 border-red-200 text-red-600"
+                        className="h-9 gap-2 border-red-200 text-red-600 cursor-pointer"
                       >
                         <XCircle className="h-3.5 w-3.5" />
                         Reject
@@ -279,7 +283,7 @@ const Applicants = ({ applications }) => {
                           handleAcceptReject(application._id, "accepted")
                         }
                         variant="outline"
-                        className="h-9 gap-2 border-primary/30 text-primary"
+                        className="h-9 gap-2 border-primary/30 text-primary cursor-pointer"
                       >
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         Accept

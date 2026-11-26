@@ -178,7 +178,7 @@ const MyTuitions = ({ tuitionData }) => {
                               </Badge>
                             </div>
 
-                            <h2 className="max-w-2xl text-lg font-bold leading-7 text-[#17211F] sm:text-xl">
+                            <h2 className="max-w-2xl break-words text-lg font-bold leading-7 text-[#17211F] sm:text-xl">
                               {tuition.title}
                             </h2>
                           </div>
@@ -209,7 +209,7 @@ const MyTuitions = ({ tuitionData }) => {
                               Location
                             </p>
 
-                            <p className="mt-1 text-sm font-semibold text-[#17211F]">
+                            <p className="mt-1 break-words text-sm font-semibold text-[#17211F]">
                               {tuition.location}
                             </p>
                           </div>

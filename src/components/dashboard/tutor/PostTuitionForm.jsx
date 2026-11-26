@@ -16,10 +16,13 @@ import { postTuition } from "@/lib/actions/tutor/tutor";
 import { authClient } from "@/lib/auth-client";
 import { BookOpen, ImagePlus, Send, Upload } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 const PostTuitionForm = () => {
+  const router = useRouter();
+
   //              State management
   const [imgPreview, setImgPreview] = useState("");
   const { data: session } = authClient.useSession();
@@ -72,6 +75,7 @@ const PostTuitionForm = () => {
       }
 
       toast.success(res?.message || "Tuition posted successfully!");
+      router.refresh();
       form.reset();
       setImgPreview("");
     } catch (error) {

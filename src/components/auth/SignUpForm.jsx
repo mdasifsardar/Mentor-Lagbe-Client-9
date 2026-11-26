@@ -15,25 +15,46 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
-import { authClient } from "@/lib/auth-client";
+import { authClient, uploadImage } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
 export default function SignUpForm() {
   //              State management
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   //              Form submit
   const handleSignUp = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
+    const formData = new FormData(e.currentTarget);
+    const imageFile = formData.get("image");
     const data = Object.fromEntries(formData.entries());
 
-    console.log("After submit =>", data);
+    delete data.image;
+
+    setLoading(true);
 
     try {
+      let imageUrl = "";
+
+      if (imageFile && imageFile.size > 0) {
+        if (!imageFile.type.startsWith("image/")) {
+          toast.error("Please choose an image file.");
+          return;
+        }
+
+        if (imageFile.size > 5 * 1024 * 1024) {
+          toast.error("Image must be 5 MB or less.");
+          return;
+        }
+
+        imageUrl = await uploadImage(imageFile);
+      }
+
       const { data: user, error } = await authClient.signUp.email({
         ...data,
+        ...(imageUrl ? { image: imageUrl } : {}),
       });
 
       if (error) {
@@ -45,6 +66,8 @@ export default function SignUpForm() {
       router.push("/");
     } catch (err) {
       toast.error(err?.message || "Something went wrong!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -112,7 +135,7 @@ export default function SignUpForm() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground transition-colors hover:text-foreground"
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -139,12 +162,30 @@ export default function SignUpForm() {
             </Select>
           </div>
 
+          {/* Profile Image */}
+          <div className="space-y-2">
+            <Label htmlFor="image">Profile Image (optional)</Label>
+
+            <Input
+              id="image"
+              name="image"
+              type="file"
+              accept="image/*"
+              className="h-11 cursor-pointer"
+            />
+
+            <p className="text-xs text-muted-foreground">
+              JPG, PNG or WebP. Max 5 MB.
+            </p>
+          </div>
+
           {/* Submit Button */}
           <Button
             type="submit"
+            disabled={loading}
             className="h-11 w-full bg-primary font-medium text-primary-foreground hover:bg-primary-dark cursor-pointer"
           >
-            Create Account
+            {loading ? "Creating account..." : "Create Account"}
           </Button>
         </form>
 

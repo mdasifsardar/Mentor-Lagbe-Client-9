@@ -1,13 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  CheckCircle2,
-  Clock3,
-  Trash2,
-  UserRound,
-  XCircle,
-} from "lucide-react";
+import { CheckCircle2, Clock3, Trash2, UserRound, XCircle } from "lucide-react";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { deleteApplication } from "@/lib/actions/student/student";
 import { formatDate } from "@/lib/format";
+import { useRouter } from "next/navigation";
 
 const STATUS_BADGES = {
   pending: {
@@ -38,6 +33,8 @@ const MyApplications = ({ applications = [], tutorNames = new Map() }) => {
   const [list, setList] = useState(applications);
   const [deletingId, setDeletingId] = useState(null);
 
+  const router = useRouter();
+
   const handleCancel = async (applicationId) => {
     setDeletingId(applicationId);
 
@@ -49,6 +46,8 @@ const MyApplications = ({ applications = [], tutorNames = new Map() }) => {
       setList((current) =>
         current.filter((application) => application._id !== applicationId),
       );
+
+      router.refresh();
     } catch (error) {
       toast.error(error.message || "Failed to cancel application.");
     } finally {

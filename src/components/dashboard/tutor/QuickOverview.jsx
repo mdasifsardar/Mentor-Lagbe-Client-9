@@ -2,7 +2,7 @@ import { Users, Crown, CheckCircle2 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 
-const QuickOverview = ({ tuitions = [], applications = [] }) => {
+const QuickOverview = ({ tuitions, applications, userSession }) => {
   const totalTuitions = tuitions.length;
   const approvedTuitions = tuitions.filter(
     (tuition) => tuition.approvalStatus === "approved",
@@ -37,7 +37,10 @@ const QuickOverview = ({ tuitions = [], applications = [] }) => {
             </div>
 
             <div className="mt-3 h-2 overflow-hidden rounded-full bg-primary/10">
-              <div className={`h-full rounded-full bg-primary`} style={{ width: `${approvalRate}%` }} />
+              <div
+                className={`h-full rounded-full bg-primary`}
+                style={{ width: `${approvalRate}%` }}
+              />
             </div>
           </div>
 
@@ -48,12 +51,14 @@ const QuickOverview = ({ tuitions = [], applications = [] }) => {
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-foreground">
-                  Free Plan
+                <p className="text-sm font-semibold text-foreground capitalize">
+                  {userSession?.user?.plan} Plan
                 </p>
 
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                  Up to 2 active tuition posts.
+                  {userSession?.user?.plan === "pro"
+                    ? `You have a ${userSession?.user?.plan} plan`
+                    : `You are in  ${userSession?.user?.plan} plan `}
                 </p>
               </div>
             </div>

@@ -2,7 +2,7 @@ import { BookOpen, CheckCircle2, Users, Crown } from "lucide-react";
 
 import DashboardStatCard from "@/components/dashboard/DashboardStatCard";
 
-const TutorStats = ({ tuitionData = [], applications = [] }) => {
+const TutorStats = ({ tuitionData, applications, userCurrentPlan }) => {
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <DashboardStatCard
@@ -37,11 +37,11 @@ const TutorStats = ({ tuitionData = [], applications = [] }) => {
 
       <DashboardStatCard
         title="Current Plan"
-        value="Free"
+        value={userCurrentPlan}
         label="Current"
         icon={Crown}
         iconClassName="bg-[#D9A441]/10 text-[#D9A441]"
-        labelClassName="bg-[#D9A441]/10 text-[#D9A441]"
+        labelClassName="bg-[#D9A441]/10 text-[#D9A441] "
       />
     </div>
   );

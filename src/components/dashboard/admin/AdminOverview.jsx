@@ -15,10 +15,14 @@ import { toast } from "sonner";
 import DashboardStatCard from "@/components/dashboard/DashboardStatCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getAdminStats } from "@/lib/actions/admin/admin";
+import {
+  getAdminStats,
+  getReportedRevenue,
+} from "@/lib/actions/admin/admin";
 
 const AdminOverview = () => {
   const [stats, setStats] = useState(null);
+  const [revenue, setRevenue] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,6 +30,9 @@ const AdminOverview = () => {
       try {
         const data = await getAdminStats();
         setStats(data.stats);
+
+        const reported = await getReportedRevenue();
+        setRevenue(reported);
       } catch (error) {
         toast.error(error.message || "Failed to load admin statistics");
       } finally {
@@ -130,18 +137,17 @@ const AdminOverview = () => {
 
             <div>
               <p className="text-sm font-medium text-muted-foreground">
-                Total Revenue
+                Reported Revenue
               </p>
 
               <p className="mt-1 font-heading text-2xl font-bold text-foreground">
-                ${Number(stats?.totalRevenue || 0).toFixed(2)}
+                ${Number(revenue).toFixed(2)}
               </p>
             </div>
           </div>
 
           <p className="max-w-sm text-xs leading-5 text-muted-foreground">
-            Revenue is calculated from paid records in the payments collection
-            and updated automatically.
+            Total paid by Pro members from Stripe.
           </p>
         </CardContent>
       </Card>

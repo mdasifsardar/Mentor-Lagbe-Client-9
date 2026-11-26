@@ -1,5 +1,6 @@
 import { BookOpen, ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 
 const RecentTuitions = ({ tuitions = [] }) => {
   const recent = tuitions.slice(0, 6).map((tuition) => ({
@@ -24,10 +25,13 @@ const RecentTuitions = ({ tuitions = [] }) => {
             </p>
           </div>
 
-          <button className="hidden items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary-dark sm:flex">
+          <Link
+            href={"/dashboard/tutor/my-tuitions"}
+            className="hidden cursor-pointer items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-primary-dark sm:flex"
+          >
             View All
             <ChevronRight className="h-4 w-4" />
-          </button>
+          </Link>
         </div>
 
         <div className="mt-5 space-y-3">
@@ -51,7 +55,7 @@ const RecentTuitions = ({ tuitions = [] }) => {
                       {tuition.title}
                     </p>
 
-                    <p className="mt-1 text-xs text-muted-foreground">
+                    <p className="mt-1 truncate text-xs text-muted-foreground">
                       {tuition.location} · {tuition.mode} · ৳
                       {tuition.monthlyFee.toLocaleString("en-BD")}/month
                     </p>
@@ -66,7 +70,7 @@ const RecentTuitions = ({ tuitions = [] }) => {
           )}
         </div>
 
-        <button className="mt-4 flex w-full items-center justify-center gap-1 rounded-lg border border-border py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/5 sm:hidden">
+        <button className="mt-4 flex w-full cursor-pointer items-center justify-center gap-1 rounded-lg border border-border py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/5 sm:hidden">
           View All
           <ChevronRight className="h-4 w-4" />
         </button>

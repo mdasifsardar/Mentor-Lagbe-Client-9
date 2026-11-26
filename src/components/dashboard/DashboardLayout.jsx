@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import DashboardSidebar from "./DashboardSidebar";
 import { authClient } from "@/lib/auth-client";
+import Image from "next/image";
+import { DropdownMenu, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 export default function DashboardLayout({ children }) {
   const { data: session } = authClient.useSession();
@@ -24,8 +26,8 @@ export default function DashboardLayout({ children }) {
           />
 
           {/* Workspace Title */}
-          <div>
-            <p className="font-heading text-sm font-semibold text-foreground capitalize">
+          <div className="min-w-0">
+            <p className="truncate font-heading text-sm font-semibold text-foreground capitalize">
               {role} Workspace
             </p>
 
@@ -36,24 +38,42 @@ export default function DashboardLayout({ children }) {
 
           {/* Current User */}
           <div className="ml-auto flex items-center gap-3">
-            {/* User Information */}
-            <div className="hidden text-right sm:block">
-              <p className="text-sm font-bold leading-5 text-foreground">
-                {user?.name}
-              </p>
+            {/* User Avatar & Information */}
+            <div className="flex items-center gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border-2 border-primary/20 bg-primary/10 shadow-sm transition-all hover:border-primary hover:bg-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 cursor-pointer">
+                  {user?.image ? (
+                    <Image
+                      src={user.image}
+                      alt={user.name || "User"}
+                      width={40}
+                      height={40}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="font-heading text-sm font-bold text-primary">
+                      {user?.name?.slice(0, 2)}
+                    </span>
+                  )}
+                </DropdownMenuTrigger>
 
-              <div className="mt-0.5 flex items-center justify-end gap-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                {/* তোমার existing DropdownMenuContent এখানে থাকবে */}
+              </DropdownMenu>
 
-                <p className="text-xs font-medium capitalize text-muted-foreground">
-                  {role}
+              {/* User Information */}
+              <div className="hidden text-right sm:block">
+                <p className="truncate text-sm font-bold leading-5 text-foreground">
+                  {user?.name}
                 </p>
-              </div>
-            </div>
 
-            {/* Avatar */}
-            <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-primary/20 bg-primary/10 font-heading text-sm font-bold text-primary shadow-sm">
-              A
+                <div className="mt-0.5 flex items-center justify-end gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+
+                  <p className="text-xs font-medium capitalize text-muted-foreground">
+                    {user?.role}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </header>

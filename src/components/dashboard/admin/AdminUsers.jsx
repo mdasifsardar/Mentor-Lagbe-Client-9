@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Search, UserRound } from "lucide-react";
 import { toast } from "sonner";
 
@@ -25,6 +26,7 @@ const roleStyles = {
 };
 
 const AdminUsers = () => {
+  const router = useRouter();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
@@ -56,6 +58,7 @@ const AdminUsers = () => {
     try {
       const data = await updateUserRole(id, role);
       toast.success(data.message || "Role updated");
+      router.refresh();
     } catch (error) {
       setUsers(previous);
       toast.error(error.message || "Failed to update role");
@@ -233,7 +236,7 @@ const AdminUsers = () => {
                   </Badge>
                 </div>
 
-                <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-4">
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
                   <p className="text-xs text-muted-foreground">
                     Joined {formatDate(user.createdAt)}
                   </p>
@@ -243,7 +246,7 @@ const AdminUsers = () => {
                     onValueChange={(value) => handleRoleChange(user._id, value)}
                     disabled={updatingId === user._id}
                   >
-                    <SelectTrigger className="h-9 w-[130px]">
+                    <SelectTrigger className="h-9 w-full max-w-[55%] sm:w-[130px] sm:max-w-none">
                       <SelectValue />
                     </SelectTrigger>
 

@@ -126,6 +126,7 @@ export default async function Home() {
                     src={tuition.bannerImage}
                     alt={tuition.title}
                     fill
+                    loading="eager"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
@@ -169,7 +170,7 @@ export default async function Home() {
                   </div>
                 </CardContent>
 
-                <CardFooter className="flex items-center justify-between gap-3 border-t border-border bg-card px-5 py-4">
+                <CardFooter className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-card px-5 py-4">
                   <p className="text-lg font-bold text-foreground sm:text-xl">
                     ৳{Number(tuition.monthlyFee).toLocaleString("en-BD")}
                     <span className="ml-1 text-xs font-normal text-muted-foreground">

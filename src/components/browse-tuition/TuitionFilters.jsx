@@ -77,7 +77,7 @@ const TuitionFilters = () => {
             name={group.id}
             value={selectedFilters[group.id] || ""}
             onChange={(e) => handleFilterChange(group.id, e.target.value)}
-            className="h-11 w-44 cursor-pointer rounded-xl border-2 border-[#1E3A34]/20 bg-white px-4 text-sm font-medium text-[#1E3A34] shadow-sm transition-colors hover:border-[#0F4D42]/40 focus-visible:border-[#0F4D42] focus-visible:outline-none"
+            className="h-11 w-full cursor-pointer rounded-xl border-2 border-[#1E3A34]/20 bg-white px-4 text-sm font-medium text-[#1E3A34] shadow-sm transition-colors hover:border-[#0F4D42]/40 focus-visible:border-[#0F4D42] focus-visible:outline-none sm:w-44"
           >
             <option value="">All {group.title}</option>
             {group.options.map((option) => (
