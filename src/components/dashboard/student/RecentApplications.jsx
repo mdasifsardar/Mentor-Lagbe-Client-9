@@ -34,7 +34,7 @@ const RecentApplications = ({ applications = [] }) => {
             </p>
 
             <Button className="mt-5">
-              <Link href="/tuitions">Explore Tuitions</Link>
+              <Link href="/browse-tuitions">Explore Tuitions</Link>
             </Button>
           </div>
         ) : (
