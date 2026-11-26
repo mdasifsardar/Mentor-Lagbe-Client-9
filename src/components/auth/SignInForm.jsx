@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useState } from "react";
 import { toast } from "sonner";
-import { authClient, getAuthToken } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
+import { getAuthToken } from "@/lib/actions/auth";
 import { useRouter } from "next/navigation";
 
 const SignInForm = () => {

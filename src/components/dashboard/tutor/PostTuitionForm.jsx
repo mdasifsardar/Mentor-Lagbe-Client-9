@@ -12,7 +12,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { postTuition } from "@/lib/actions/tutor/tutor";
+import {
+  postTuition,
+  getTuitionByTutorEmail,
+} from "@/lib/actions/tutor/tutor";
 import { authClient } from "@/lib/auth-client";
 import { BookOpen, ImagePlus, Send, Upload } from "lucide-react";
 import Image from "next/image";
@@ -35,6 +38,17 @@ const PostTuitionForm = () => {
     const form = e.currentTarget;
 
     try {
+      const tuitions = await getTuitionByTutorEmail(user?.email);
+      const tuitionCount = Array.isArray(tuitions) ? tuitions.length : 0;
+
+      if (tuitionCount >= 2 && user?.plan !== "pro") {
+        toast.error(
+          "Free tutors can post only 2 tuitions. Upgrade to Pro to post more.",
+        );
+        router.push("/pricing");
+        return;
+      }
+
       const formData = new FormData(form);
       const imageFile = formData.get("bannerImage");
 

@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
-import { authClient, uploadImage } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
+import { uploadImage } from "@/lib/actions/auth";
 import { useRouter } from "next/navigation";
 
 export default function SignUpForm() {

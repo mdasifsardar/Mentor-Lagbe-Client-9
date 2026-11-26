@@ -1,4 +1,4 @@
-import { authFetch } from "@/lib/auth-client";
+import { authFetch } from "@/lib/actions/auth";
 
 // Base API URL fallback set to local Express server on port 5000
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";

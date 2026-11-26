@@ -29,7 +29,7 @@ const TutorWelcome = async () => {
         </p>
       </div>
 
-      <Link href={"/dashboard/tutor/post-tution"}>
+      <Link href={"/dashboard/tutor/post-tuition"}>
         <Button className="h-10 w-full shrink-0 bg-primary font-semibold text-primary-foreground hover:bg-primary-dark sm:w-auto cursor-pointer">
           <Plus className="mr-2 h-4 w-4" />
           Post New Tuition

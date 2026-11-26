@@ -1,4 +1,4 @@
-import { authFetch } from "@/lib/auth-client";
+import { authFetch } from "@/lib/actions/auth";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 

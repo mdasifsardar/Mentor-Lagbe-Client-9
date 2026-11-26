@@ -21,7 +21,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { authClient, updateProfile, uploadImage } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
+import { updateProfile, uploadImage } from "@/lib/actions/auth";
 import { formatDate } from "@/lib/format";
 
 const formFromUser = (user) => ({
